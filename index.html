@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>柠檬茶</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ========== 全局样式 ========== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景图片容器 */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            animation: backgroundFade 15s infinite;
+        }
+        
+        /* 动态背景通过style属性设置，不再用CSS固定 */
+        .bg-image:nth-child(1) { animation-delay: 0s; }
+        .bg-image:nth-child(2) { animation-delay: 7.5s; }
+        
+        @keyframes backgroundFade {
+            0% { opacity: 0; }
+            15% { opacity: 1; }
+            35% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        /* ========== 前台样式 ========== */
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background: transparent;
+            border-radius: 20px;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        /* 左上角登录入口 */
+        .login-entrance {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(2px);
+            transition: all 0.3s ease;
+        }
+
+        .login-entrance:hover {
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        button {
+            font-size: 18px;
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        h2 {
+            color: white;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        p {
+            color: white;
+            font-size:14px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        
+        .app-buttons, .video-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* 视频播放器 */
+        .video-container {
+            margin-top: 20px;
+            display: none;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 16px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .video-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .drive-player, .youtube-player {
+            width: 100%;
+            height: 300px;
+            border-radius: 12px;
+            border: none;
+        }
+        
+        .video-title {
+            color: white;
+            margin: 10px 0 5px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .close-video {
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: 1px solid white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-top: 10px;
+            cursor: pointer;
+            width: auto;
+            display: inline-block;
+        }
+
+        /* 密码弹窗 */
+        .password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .password-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .password-box {
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 28px;
+            padding: 25px;
+            width: 280px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.15);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+
+        .password-overlay.active .password-box {
+            transform: scale(1);
+        }
+
+        .password-box h3 {
+            color: white;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-size: 22px;
+            text-align: center;
+        }
+
+        .password-box input {
+            width: 100%;
+            padding: 15px 0 15px 15px;
+            border: none;
+            border-radius: 40px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 18px;
+            outline: none;
+            box-sizing: border-box;
+            border: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .password-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .password-actions button {
+            margin: 0;
+            padding: 12px 0;
+            font-size: 16px;
+            border-radius: 40px;
+            width: 100%;
+        }
+
+        .btn-confirm {
+            background-color: #FFD447;
+            color: #222;
+        }
+
+        .btn-cancel {
+            background-color: transparent;
+            border: 1px solid rgba(255,255,255,0.5);
+            color: white;
+        }
+
+        .error-message {
+            color: #FF6B6B;
+            font-size: 13px;
+            margin-top: 8px;
+            min-height: 20px;
+            text-align: center;
+        }
+
+        /* ========== 后台管理样式 (优化版) ========== */
+        .admin-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            padding: 30px 35px;
+            position: relative;
+            z-index: 100;
+            border: 1px solid rgba(255,212,71,0.2);
+        }
+
+        .admin-container h1 {
+            font-size: 28px;
+            font-weight: 650;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: #1a1e2b;
+            letter-spacing: -0.3px;
+        }
+
+        .admin-container h1 span {
+            background: #FFD447;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e1e2f;
+            box-shadow: 0 2px 6px rgba(255,212,71,0.3);
+        }
+
+        .admin-container h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 32px 0 18px;
+            border-left: 6px solid #FFD447;
+            padding-left: 16px;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: #f8fafd;
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            border: 1px solid #e9edf2;
+            transition: all 0.2s;
+        }
+        .card:hover {
+            border-color: #FFD447;
+            box-shadow: 0 8px 20px rgba(255,212,71,0.12);
+        }
+
+        .card label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            display: block;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .card input, .card select {
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 40px;
+            border: 1px solid #dde3e9;
+            font-size: 15px;
+            background: white;
+            margin-bottom: 18px;
+            transition: 0.2s;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .card input:focus, .card select:focus {
+            border-color: #FFD447;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255,212,71,0.15);
+        }
+
+        .badge {
+            background: #FFD447;
+            color: #1e1e2f;
+            padding: 5px 14px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 14px;
+            letter-spacing: 0.2px;
+        }
+
+        .btn-primary {
+            background: #FFD447;
+            border: none;
+            color: #1a1e2b;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            width: auto;
+            box-shadow: 0 4px 10px rgba(255,212,71,0.3);
+            transition: 0.15s;
+        }
+        .btn-primary:hover {
+            background: #ffcd2b;
+            transform: scale(1.02);
+        }
+
+        .btn-danger {
+            background: #fff2f0;
+            border: 1px solid #ffbbb5;
+            color: #b34033;
+            padding: 8px 18px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .btn-danger:hover {
+            background: #ffe4e0;
+            border-color: #ff8a7a;
+        }
+
+        .btn-success {
+            background: #f0f9f0;
+            border: 1px solid #bae3b0;
+            color: #1f6d1f;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .btn-success:hover {
+            background: #e0f0dc;
+            border-color: #8bc481;
+        }
+
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .publish-bar {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            padding: 20px 28px;
+            background: #f2f5f9;
+            border-radius: 50px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logout-btn {
+            background: #f1f4f9;
+            border: 1px solid #cfd9e6;
+            padding: 10px 24px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #334155;
+            transition: 0.15s;
+        }
+        .logout-btn:hover {
+            background: #e2e8f0;
+            border-color: #a0b3cc;
+        }
+
+        /* 视频卡片专用样式 */
+        .video-card {
+            background: #f8fafd;
+            border-radius: 28px;
+            padding: 22px 25px;
+            margin-bottom: 20px;
+            border: 1px solid #e9edf2;
+        }
+        .video-card:hover {
+            border-color: #FFD447;
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 2fr;
+            gap: 16px;
+            align-items: center;
+        }
+        @media (max-width:700px){
+            .video-grid { grid-template-columns: 1fr 2fr; }
+        }
+
+        /* 背景图片专用设置卡片 */
+        .bg-settings {
+            background: #f8fafd;
+            border-radius: 24px;
+            padding: 22px 28px;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            align-items: flex-end;
+        }
+        .bg-item {
+            flex: 1 1 250px;
+        }
+        .bg-item label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #334155;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .bg-item input {
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 40px;
+            border: 1px solid #d0d7de;
+            font-size: 14px;
+        }
+
+        /* 登录弹窗 */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .login-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 32px;
+            padding: 40px;
+            width: 340px;
+            text-align: center;
+        }
+
+        .login-box h2 {
+            color: #1e1e2f;
+            margin-bottom: 30px;
+            border: none;
+            text-align: center;
+            text-shadow: none;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #d0d7de;
+            border-radius: 40px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .login-box button {
+            background: #FFD447;
+            color: #1e1e2f;
+            margin-bottom: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+        .admin-container .loading {
+            color: #1e293b;
+        }
+        /* 全局密码框 */
+        .global-password-wrap {
+            background: #f8fafd;
+            padding: 18px 25px;
+            border-radius: 40px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .global-password-wrap input {
+            flex: 1;
+            min-width: 200px;
+            padding: 14px 20px;
+            border-radius: 60px;
+            border: 1px solid #dde3e9;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景图片容器 (动态通过JS设置) -->
+    <div class="background-container">
+        <div class="bg-image" id="bg1"></div>
+        <div class="bg-image" id="bg2"></div>
+    </div>
+
+    <!-- 左上角登录入口 -->
+    <div class="login-entrance" onclick="showLoginModal()">🔐 登录</div>
+
+    <!-- 登录弹窗 -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-box">
+            <h2>管理员登录</h2>
+            <input type="text" id="username" placeholder="账号" value="">
+            <input type="password" id="password" placeholder="密码" value="">
+            <button onclick="handleLogin()">进入后台</button>
+            <p style="margin-top:15px; font-size:12px; color:#999;" onclick="closeLoginModal()">点击空白处关闭</p>
+        </div>
+    </div>
+
+    <!-- 前台界面 -->
+    <div id="frontendContainer" class="container">
+        <div id="loadingMessage" class="loading">加载配置中...</div>
+        <div id="mainContent" style="display: none;">
+            <h2>🍋 柠檬茶提供<br>请选择下载或观看视频</h2>
+            
+            <div class="app-buttons" id="appButtons"></div>
+            <div class="video-buttons" id="videoButtons"></div>
+            
+            <!-- 视频播放区域 -->
+            <div id="videoContainer" class="video-container">
+                <div class="video-title" id="videoTitle">正在播放</div>
+                <div id="playerContainer" style="width:100%; height:300px; border-radius:12px;"></div>
+                <button class="close-video" onclick="closeVideo()">关闭视频</button>
+            </div>
+            
+            <p>点击按钮开始下载或观看视频</p>
+        </div>
+    </div>
+
+    <!-- 后台界面 (优化后 + 背景管理) -->
+    <div id="adminContainer" class="admin-container hidden">
+        <div class="admin-header">
+            <h1>🍋 柠檬茶 · 后台管理 <span>管理员</span></h1>
+            <button class="logout-btn" onclick="logout()">退出后台</button>
+        </div>
+
+        <div id="adminLoading" class="loading" style="color:#1e293b;">加载中...</div>
+        <div id="adminContent" style="display: none;">
+            
+            <!-- 新增：背景图片设置卡片 -->
+            <h2>🖼️ 背景图片管理</h2>
+            <div class="bg-settings">
+                <div class="bg-item">
+                    <label>背景图 1 (第一张)</label>
+                    <input type="url" id="bgInput1" placeholder="https://...第一张图片URL" value="">
+                </div>
+                <div class="bg-item">
+                    <label>背景图 2 (第二张)</label>
+                    <input type="url" id="bgInput2" placeholder="https://...第二张图片URL" value="">
+                </div>
+                <button class="btn-primary" onclick="applyBackgroundPreview()" style="margin-bottom:0;">🔄 预览背景</button>
+                <span style="font-size:13px; color:#64748b;">保存Gist后永久生效</span>
+            </div>
+
+            <h2>🔐 视频通用密码</h2>
+            <div class="global-password-wrap">
+                <input type="text" id="adminGlobalPassword" placeholder="例如 123456 (留空则无需密码)" value="">
+                <span style="color:#4b5565; font-size:14px;">修改后需手动保存至Gist</span>
+            </div>
+
+            <h2>📲 App 下载按钮 <span style="font-size:14px; font-weight:400; color:#666; margin-left:8px;">可自由增删颜色</span></h2>
+            <div id="appButtonsAdmin" class="card-grid"></div>
+            <button class="btn-primary" onclick="addAppButton()" style="margin-top:20px;">➕ 新增下载按钮</button>
+
+            <h2 style="margin-top:48px;">🎬 视频按钮 · 管理</h2>
+            <div id="videoButtonsAdmin"></div>
+            <button class="btn-primary" onclick="addVideoButton()" style="margin-top:10px;">➕ 新增视频按钮</button>
+
+            <div class="publish-bar">
+                <div style="flex:1;"><strong>📤 保存配置到 Gist</strong> <span style="color:#4b5565; margin-left:15px;">点击按钮跳转编辑，粘贴修改后的JSON</span></div>
+                <button class="btn-success" onclick="openGistEdit()">✏️ 前往 Gist 修改</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 视频密码弹窗 -->
+    <div id="passwordOverlay" class="password-overlay">
+        <div class="password-box">
+            <h3>🔐 请输入密码<br>不知密码可以找柠檬茶</h3>
+            <input type="password" id="videoPasswordInput" placeholder="密码">
+            <div id="videoPasswordError" class="error-message"></div>
+            <div class="password-actions">
+                <button class="btn-cancel" onclick="closeVideoPasswordModal()">取消</button>
+                <button class="btn-confirm" onclick="confirmVideoPassword()">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== 配置 ==========
+        const GIST_URL = 'https://gist.githubusercontent.com/lemontealg/3395ef986782377142871b8747a822f4/raw//config.json';
+        const GIST_EDIT_URL = 'https://gist.github.com/lemontealg/3395ef986782377142871b8747a822f4/edit';
+
+        const ADMIN_CREDENTIALS = {
+            username: 'lg',
+            password: '128128'
+        };
+
+        let config = null;
+        let isAdmin = sessionStorage.getItem('lemontea_admin') === 'true';
+
+        // 初始化背景 (从config读取)
+        function updateBackgroundFromConfig() {
+            const bg1 = document.getElementById('bg1');
+            const bg2 = document.getElementById('bg2');
+            if (config && config.backgrounds) {
+                bg1.style.backgroundImage = `url('${config.backgrounds[0] || 'https://i.ibb.co/wtRXTb3/16015528110706048.webp'}')`;
+                bg2.style.backgroundImage = `url('${config.backgrounds[1] || 'https://i.ibb.co/4n9fmY2d/17281386694626688.webp'}')`;
+            } else {
+                // 默认fallback
+                bg1.style.backgroundImage = "url('https://i.ibb.co/wtRXTb3/16015528110706048.webp')";
+                bg2.style.backgroundImage = "url('https://i.ibb.co/4n9fmY2d/17281386694626688.webp')";
+            }
+        }
+
+        window.onload = async function() {
+            await loadConfig();
+            updateBackgroundFromConfig();   // 应用背景
+            
+            if (isAdmin) {
+                document.getElementById('frontendContainer').classList.add('hidden');
+                document.getElementById('adminContainer').classList.remove('hidden');
+                renderAdmin();
+            } else {
+                document.getElementById('frontendContainer').classList.remove('hidden');
+                document.getElementById('adminContainer').classList.add('hidden');
+                renderFrontend();
+            }
+        };
+
+        async function loadConfig() {
+            try {
+                document.getElementById('loadingMessage').style.display = 'block';
+                document.getElementById('mainContent').style.display = 'none';
+                
+                const response = await fetch(GIST_URL + '?t=' + Date.now());
+                config = await response.json();
+                
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+            } catch (error) {
+                console.error('加载配置失败，使用默认配置', error);
+                config = {
+                    globalPassword: '123456',
+                    backgrounds: [
+                        'https://i.ibb.co/wtRXTb3/16015528110706048.webp',
+                        'https://i.ibb.co/4n9fmY2d/17281386694626688.webp'
+                    ],
+                    appButtons: [
+                        { label: '防止息屏', url: 'https://play.google.com/store/apps/details?id=com.doublep.wakey', color: '#FFD447' },
+                        { label: 'AAS', url: 'https://my5353.com/app2', color: '#007AFF' }
+                    ],
+                    videoButtons: [
+                        { label: 'SUKISU教程', platform: 'google-drive', fileId: '1clTYzm2fLepJZ8N3Ibs_mcd8zD_DsRSB', youtubeUrl: '' },
+                        { label: '第二个视频', platform: 'youtube', fileId: '', youtubeUrl: 'dQw4w9WgXcQ' }
+                    ]
+                };
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+            }
+        }
+
+        // ========== 登录弹窗控制 ==========
+        window.showLoginModal = function() {
+            document.getElementById('loginOverlay').classList.add('active');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        };
+
+        window.closeLoginModal = function() {
+            document.getElementById('loginOverlay').classList.remove('active');
+        };
+
+        document.getElementById('loginOverlay').addEventListener('click', function(e) {
+            if (e.target === document.getElementById('loginOverlay')) {
+                closeLoginModal();
+            }
+        });
+
+        window.handleLogin = function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                sessionStorage.setItem('lemontea_admin', 'true');
+                isAdmin = true;
+                closeLoginModal();
+                document.getElementById('frontendContainer').classList.add('hidden');
+                document.getElementById('adminContainer').classList.remove('hidden');
+                renderAdmin();
+            } else {
+                alert('账号或密码错误');
+            }
+        };
+
+        window.logout = function() {
+            sessionStorage.removeItem('lemontea_admin');
+            isAdmin = false;
+            document.getElementById('adminContainer').classList.add('hidden');
+            document.getElementById('frontendContainer').classList.remove('hidden');
+            renderFrontend();
+            // 退出时背景恢复config中的设置
+            updateBackgroundFromConfig();
+        };
+
+        // ========== 渲染前台 ==========
+        function renderFrontend() {
+            window.videoConfig = {};
+            config.videoButtons.forEach((v, idx) => {
+                let videoId = '';
+                if (v.platform === 'google-drive') {
+                    videoId = v.fileId || '';
+                } else {
+                    let ytId = v.youtubeUrl || '';
+                    if (ytId.includes('youtu.be')) {
+                        const parts = ytId.split('/');
+                        ytId = parts[parts.length-1].split('?')[0];
+                    } else if (ytId.includes('youtube.com/watch')) {
+                        const match = ytId.match(/[?&]v=([^&]+)/);
+                        if (match) ytId = match[1];
+                    }
+                    videoId = ytId;
+                }
+                
+                window.videoConfig['video' + idx] = {
+                    platform: v.platform,
+                    id: videoId,
+                    title: v.label || ('视频' + (idx+1))
+                };
+            });
+            
+            const appDiv = document.getElementById('appButtons');
+            appDiv.innerHTML = '';
+            config.appButtons.forEach(btn => {
+                const button = document.createElement('button');
+                button.style.backgroundColor = btn.color || '#FFD447';
+                button.style.color = (btn.color || '').toUpperCase() === '#FFD447' ? '#333' : 'white';
+                button.textContent = btn.label || '下载';
+                button.onclick = () => window.location.href = btn.url;
+                appDiv.appendChild(button);
+            });
+            
+            const videoDiv = document.getElementById('videoButtons');
+            videoDiv.innerHTML = '';
+            config.videoButtons.forEach((v, idx) => {
+                const button = document.createElement('button');
+                button.style.backgroundColor = idx === 0 ? '#FF3B30' : (idx === 1 ? '#8A2BE2' : '#FF8C00');
+                button.textContent = '▶ ' + (v.label || ('视频 ' + (idx+1)));
+                button.onclick = () => requestVideoPasswordAndPlay('video' + idx);
+                videoDiv.appendChild(button);
+            });
+        }
+
+        // ========== 渲染后台 (包含背景字段) ==========
+        function renderAdmin() {
+            document.getElementById('adminLoading').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'block';
+            
+            // 背景输入框填充
+            if (config.backgrounds && config.backgrounds.length >= 2) {
+                document.getElementById('bgInput1').value = config.backgrounds[0] || '';
+                document.getElementById('bgInput2').value = config.backgrounds[1] || '';
+            } else {
+                document.getElementById('bgInput1').value = 'https://i.ibb.co/wtRXTb3/16015528110706048.webp';
+                document.getElementById('bgInput2').value = 'https://i.ibb.co/4n9fmY2d/17281386694626688.webp';
+            }
+            
+            document.getElementById('adminGlobalPassword').value = config.globalPassword || '';
+            
+            // App 按钮卡片
+            const appAdmin = document.getElementById('appButtonsAdmin');
+            appAdmin.innerHTML = '';
+            config.appButtons.forEach((btn, idx) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="badge">📱 按钮 ${idx+1}</div>
+                    <label>按钮名称</label>
+                    <input type="text" id="app_label_${idx}" value="${(btn.label || '').replace(/"/g, '&quot;')}">
+                    <label>链接 (URL)</label>
+                    <input type="url" id="app_url_${idx}" value="${(btn.url || '').replace(/"/g, '&quot;')}">
+                    <label>背景颜色 <span style="font-weight:400; color:#666;">(如 #FFD447)</span></label>
+                    <input type="text" id="app_color_${idx}" value="${btn.color || '#FFD447'}">
+                    <div style="display: flex; gap: 8px; justify-content:flex-end; margin-top:8px;">
+                        ${config.appButtons.length > 1 ? `<button class="btn-danger" onclick="removeAppButton(${idx})">🗑️ 删除</button>` : ''}
+                    </div>
+                `;
+                appAdmin.appendChild(card);
+            });
+            
+            // 视频按钮管理 
+            const videoAdmin = document.getElementById('videoButtonsAdmin');
+            videoAdmin.innerHTML = '';
+            config.videoButtons.forEach((v, idx) => {
+                const div = document.createElement('div');
+                div.className = 'video-card';
+                div.innerHTML = `
+                    <div class="flex-row">
+                        <span class="badge">🎬 视频 ${idx+1}</span>
+                        ${config.videoButtons.length > 1 ? `<button class="btn-danger" onclick="removeVideoButton(${idx})">🗑️ 移除</button>` : ''}
+                    </div>
+                    <div class="video-grid">
+                        <label>按钮名称</label>
+                        <input type="text" id="video_label_${idx}" value="${(v.label || '').replace(/"/g, '&quot;')}">
+                        <label>平台</label>
+                        <select id="video_platform_${idx}">
+                            <option value="google-drive" ${v.platform === 'google-drive' ? 'selected' : ''}>Google Drive</option>
+                            <option value="youtube" ${v.platform === 'youtube' ? 'selected' : ''}>YouTube</option>
+                        </select>
+                        
+                        <label style="grid-column:1/2;">ID/链接</label>
+                        <div style="grid-column:2/5;">
+                            <input type="text" id="video_input_${idx}" value="${(v.platform === 'google-drive' ? v.fileId || '' : v.youtubeUrl || '')}" placeholder="${v.platform === 'google-drive' ? '文件ID' : 'YouTube URL 或 ID'}">
+                        </div>
+                    </div>
+                `;
+                videoAdmin.appendChild(div);
+            });
+        }
+
+        // 预览背景 (临时生效，不保存到config)
+        window.applyBackgroundPreview = function() {
+            const url1 = document.getElementById('bgInput1').value.trim();
+            const url2 = document.getElementById('bgInput2').value.trim();
+            if (url1) document.getElementById('bg1').style.backgroundImage = `url('${url1}')`;
+            if (url2) document.getElementById('bg2').style.backgroundImage = `url('${url2}')`;
+        };
+
+        // ========== 后台操作 ==========
+        window.addAppButton = function() {
+            config.appButtons.push({ label: '新下载', url: 'https://', color: '#FFD447' });
+            renderAdmin();
+        };
+
+        window.removeAppButton = function(index) {
+            if (config.appButtons.length > 1) {
+                config.appButtons.splice(index, 1);
+                renderAdmin();
+            }
+        };
+
+        window.addVideoButton = function() {
+            config.videoButtons.push({ label: '新视频', platform: 'google-drive', fileId: '', youtubeUrl: '' });
+            renderAdmin();
+        };
+
+        window.removeVideoButton = function(index) {
+            if (config.videoButtons.length > 1) {
+                config.videoButtons.splice(index, 1);
+                renderAdmin();
+            }
+        };
+
+        // ========== 跳转到 Gist 编辑 (收集当前配置 + 背景) ==========
+        window.openGistEdit = function() {
+            // 收集背景
+            const bg1 = document.getElementById('bgInput1').value.trim() || 'https://i.ibb.co/wtRXTb3/16015528110706048.webp';
+            const bg2 = document.getElementById('bgInput2').value.trim() || 'https://i.ibb.co/4n9fmY2d/17281386694626688.webp';
+            
+            const currentConfig = {
+                backgrounds: [bg1, bg2],
+                globalPassword: document.getElementById('adminGlobalPassword').value,
+                appButtons: config.appButtons.map((_, idx) => ({
+                    label: document.getElementById(`app_label_${idx}`)?.value || '按钮',
+                    url: document.getElementById(`app_url_${idx}`)?.value || 'https://',
+                    color: document.getElementById(`app_color_${idx}`)?.value || '#FFD447'
+                })),
+                videoButtons: config.videoButtons.map((_, idx) => {
+                    const platform = document.getElementById(`video_platform_${idx}`)?.value || 'google-drive';
+                    const inputVal = document.getElementById(`video_input_${idx}`)?.value || '';
+                    return {
+                        label: document.getElementById(`video_label_${idx}`)?.value || '视频',
+                        platform: platform,
+                        fileId: platform === 'google-drive' ? inputVal : '',
+                        youtubeUrl: platform === 'youtube' ? inputVal : ''
+                    };
+                })
+            };
+            
+            const configStr = JSON.stringify(currentConfig, null, 2);
+            alert('👉 步骤：\n1. 复制弹出的配置内容 (包含背景)\n2. 点击确定后打开 Gist\n3. 粘贴覆盖原有内容\n4. 点击 Update 保存');
+            prompt('复制这个配置 (Ctrl+C)，然后粘贴到 Gist 中', configStr);
+            window.open(GIST_EDIT_URL, '_blank');
+        };
+
+        // ========== 视频播放逻辑 ==========
+        let pendingVideoKey = null;
+
+        window.requestVideoPasswordAndPlay = function(videoKey) {
+            if (!window.videoConfig[videoKey] || !window.videoConfig[videoKey].id) {
+                alert('视频尚未配置ID，请管理员在后台设置');
+                return;
+            }
+            pendingVideoKey = videoKey;
+            document.getElementById('videoPasswordInput').value = '';
+            document.getElementById('videoPasswordError').textContent = '';
+            document.getElementById('passwordOverlay').classList.add('active');
+            setTimeout(() => document.getElementById('videoPasswordInput').focus(), 100);
+        };
+
+        window.closeVideoPasswordModal = function() {
+            document.getElementById('passwordOverlay').classList.remove('active');
+            pendingVideoKey = null;
+        };
+
+        window.confirmVideoPassword = function() {
+            if (!config.globalPassword) {
+                if (pendingVideoKey) performPlayVideo(pendingVideoKey);
+                closeVideoPasswordModal();
+                return;
+            }
+            
+            const entered = document.getElementById('videoPasswordInput').value.trim();
+            if (entered !== config.globalPassword) {
+                document.getElementById('videoPasswordError').textContent = '密码错误';
+                document.getElementById('videoPasswordInput').value = '';
+                document.getElementById('videoPasswordInput').focus();
+                return;
+            }
+            
+            if (pendingVideoKey) performPlayVideo(pendingVideoKey);
+            closeVideoPasswordModal();
+        };
+
+        function performPlayVideo(videoKey) {
+            const video = window.videoConfig[videoKey];
+            if (!video) return;
+            
+            document.getElementById('videoTitle').textContent = `正在播放：${video.title}`;
+            const playerContainer = document.getElementById('playerContainer');
+            playerContainer.innerHTML = '';
+            
+            if (video.platform === 'google-drive') {
+                const iframe = document.createElement('iframe');
+                iframe.className = 'drive-player';
+                iframe.src = `https://drive.google.com/file/d/${video.id}/preview`;
+                iframe.allow = 'autoplay; encrypted-media';
+                iframe.allowFullscreen = true;
+                playerContainer.appendChild(iframe);
+            } else {
+                const iframe = document.createElement('iframe');
+                iframe.className = 'youtube-player';
+                iframe.src = `https://www.youtube.com/embed/${video.id}?autoplay=1`;
+                iframe.allow = 'accelerometer; autoplay; encrypted-media';
+                iframe.allowFullscreen = true;
+                playerContainer.appendChild(iframe);
+            }
+            
+            document.getElementById('videoContainer').classList.add('show');
+            document.getElementById('videoContainer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        window.closeVideo = function() {
+            document.getElementById('playerContainer').innerHTML = '';
+            document.getElementById('videoContainer').classList.remove('show');
+        };
+
+        document.getElementById('passwordOverlay').addEventListener('click', function(e) {
+            if (e.target === document.getElementById('passwordOverlay')) {
+                closeVideoPasswordModal();
+            }
+        });
+    </script>
+</body>
+</html>
