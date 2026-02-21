@@ -853,15 +853,7 @@
                 };
             });
             
-            const appDiv = document.getElementById('appButtons');
-            appDiv.innerHTML = '';
-            config.appButtons.forEach(btn => {
-                const button = document.createElement('button');
-                button.style.backgroundColor = btn.color || '#FFD447';
-                button.style.color = (btn.color || '').toUpperCase() === '#FFD447' ? '#333' : 'white';
-                button.textContent = btn.label || '下载';
-                button.onclick = () => window.location.href = btn.url;
-                appDiv.appendChild(button);
+        
             });
             
             const videoDiv = document.getElementById('videoButtons');
