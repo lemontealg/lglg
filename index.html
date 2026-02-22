@@ -39,19 +39,11 @@
             background-position: center;
             background-repeat: no-repeat;
             opacity: 0;
-            animation: backgroundFade 15s infinite;
+            transition: opacity 0s;  /* 瞬间切换，无过渡 */
         }
         
-        /* 动态背景通过style属性设置，不再用CSS固定 */
-        .bg-image:nth-child(1) { animation-delay: 0s; }
-        .bg-image:nth-child(2) { animation-delay: 7.5s; }
-        
-        @keyframes backgroundFade {
-            0% { opacity: 0; }
-            15% { opacity: 1; }
-            35% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 0; }
+        .bg-image.active {
+            opacity: 1;
         }
 
         /* ========== 前台样式 ========== */
@@ -320,7 +312,7 @@
 
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 24px;
         }
 
@@ -492,21 +484,29 @@
             .video-grid { grid-template-columns: 1fr 2fr; }
         }
 
-        /* 背景图片专用设置卡片 */
+        /* 背景图片专用设置卡片 - 增强版 */
         .bg-settings {
             background: #f8fafd;
             border-radius: 24px;
-            padding: 22px 28px;
+            padding: 28px;
             margin-bottom: 30px;
             border: 1px solid #e2e8f0;
-            display: flex;
-            flex-wrap: wrap;
+        }
+        
+        .bg-settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
-            align-items: flex-end;
+            margin-bottom: 25px;
         }
+        
         .bg-item {
-            flex: 1 1 250px;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #e9edf2;
         }
+        
         .bg-item label {
             font-weight: 600;
             font-size: 14px;
@@ -514,12 +514,74 @@
             display: block;
             margin-bottom: 8px;
         }
+        
         .bg-item input {
             width: 100%;
-            padding: 12px 18px;
+            padding: 14px 18px;
             border-radius: 40px;
             border: 1px solid #d0d7de;
             font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .bg-item input:focus {
+            border-color: #FFD447;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255,212,71,0.15);
+        }
+        
+        .bg-timer-settings {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #e9edf2;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .timer-item {
+            flex: 1 1 250px;
+        }
+        
+        .timer-item label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #334155;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .timer-item input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 40px;
+            border: 1px solid #d0d7de;
+            font-size: 14px;
+        }
+        
+        .timer-item input:focus {
+            border-color: #FFD447;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255,212,71,0.15);
+        }
+        
+        .timer-preview {
+            background: #FFD44720;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .timer-value {
+            font-weight: 700;
+            color: #1e1e2f;
+            font-size: 18px;
         }
 
         /* 登录弹窗 */
@@ -608,6 +670,89 @@
             border: 1px solid #dde3e9;
             font-size: 15px;
         }
+
+        /* 全屏网页容器 */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 4000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .fullscreen-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .fullscreen-header {
+            background-color: #FFD447;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #1e1e2f;
+            font-weight: bold;
+        }
+        
+        .fullscreen-title {
+            font-size: 18px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 70%;
+        }
+        
+        .fullscreen-close {
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            color: #1e1e2f;
+            font-size: 16px;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            width: auto;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .fullscreen-close:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .fullscreen-frame {
+            width: 100%;
+            flex: 1;
+            border: none;
+            background: white;
+        }
+
+        /* 打开方式标签 */
+        .open-type-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .open-type-fullscreen {
+            background: #FFD447;
+            color: #1e1e2f;
+        }
+        
+        .open-type-newtab {
+            background: #e2e8f0;
+            color: #334155;
+        }
     </style>
 </head>
 <body>
@@ -651,7 +796,7 @@
         </div>
     </div>
 
-    <!-- 后台界面 (优化后 + 背景管理) - 已修改为可删除到0个按钮 -->
+    <!-- 后台界面 (优化后 + 背景管理 + 时间设置) - 已修改为可删除到0个按钮 + 打开方式选择 + 背景时间设置 -->
     <div id="adminContainer" class="admin-container hidden">
         <div class="admin-header">
             <h1>🍋 柠檬茶 · 后台管理 <span>管理员</span></h1>
@@ -661,19 +806,34 @@
         <div id="adminLoading" class="loading" style="color:#1e293b;">加载中...</div>
         <div id="adminContent" style="display: none;">
             
-            <!-- 新增：背景图片设置卡片 -->
+            <!-- 增强版：背景图片设置卡片 + 时间设置 -->
             <h2>🖼️ 背景图片管理</h2>
             <div class="bg-settings">
-                <div class="bg-item">
-                    <label>背景图 1 (第一张)</label>
-                    <input type="url" id="bgInput1" placeholder="https://...第一张图片URL" value="">
+                <div class="bg-settings-grid">
+                    <div class="bg-item">
+                        <label>背景图 1 (第一张)</label>
+                        <input type="url" id="bgInput1" placeholder="https://...第一张图片URL" value="">
+                    </div>
+                    <div class="bg-item">
+                        <label>背景图 2 (第二张)</label>
+                        <input type="url" id="bgInput2" placeholder="https://...第二张图片URL" value="">
+                    </div>
                 </div>
-                <div class="bg-item">
-                    <label>背景图 2 (第二张)</label>
-                    <input type="url" id="bgInput2" placeholder="https://...第二张图片URL" value="">
+                
+                <!-- 新增：背景切换时间设置 -->
+                <div class="bg-timer-settings">
+                    <div class="timer-item">
+                        <label>⏱️ 背景切换间隔 (秒)</label>
+                        <input type="number" id="bgInterval" min="1" max="60" value="5" step="1" onchange="updateBackgroundTimePreview()">
+                    </div>
+                    <div class="timer-preview">
+                        <span>当前设置：</span>
+                        <span class="timer-value" id="bgIntervalDisplay">5</span>
+                        <span>秒切换一次</span>
+                    </div>
+                    <button class="btn-primary" onclick="applyBackgroundSettings()" style="margin-bottom:0;">🔄 应用背景设置</button>
+                    <span style="font-size:13px; color:#64748b;">保存Gist后永久生效</span>
                 </div>
-                <button class="btn-primary" onclick="applyBackgroundPreview()" style="margin-bottom:0;">🔄 预览背景</button>
-                <span style="font-size:13px; color:#64748b;">保存Gist后永久生效</span>
             </div>
 
             <h2>🔐 视频通用密码</h2>
@@ -682,7 +842,7 @@
                 <span style="color:#4b5565; font-size:14px;">修改后需手动保存至Gist</span>
             </div>
 
-            <h2>📲 App 下载按钮 <span style="font-size:14px; font-weight:400; color:#666; margin-left:8px;">可自由增删颜色</span></h2>
+            <h2>📲 App 下载按钮 <span style="font-size:14px; font-weight:400; color:#666; margin-left:8px;">可选择打开方式</span></h2>
             <div id="appButtonsAdmin" class="card-grid"></div>
             <button class="btn-primary" onclick="addAppButton()" style="margin-top:20px;">➕ 新增下载按钮</button>
 
@@ -710,10 +870,20 @@
         </div>
     </div>
 
+    <!-- 全屏网页容器 -->
+    <div id="fullscreenOverlay" class="fullscreen-overlay">
+        <div class="fullscreen-header">
+            <span class="fullscreen-title" id="fullscreenTitle">加载中...</span>
+            <button class="fullscreen-close" onclick="closeFullscreen()">关闭</button>
+        </div>
+        <iframe id="fullscreenFrame" class="fullscreen-frame" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads allow-top-navigation"></iframe>
+    </div>
+
     <script>
         // ========== 配置 ==========
         const GIST_URL = 'https://gist.githubusercontent.com/lemontealg/3395ef986782377142871b8747a822f4/raw//config.json';
         const GIST_EDIT_URL = 'https://gist.github.com/lemontealg/3395ef986782377142871b8747a822f4/edit';
+
         const ADMIN_CREDENTIALS = {
             username: 'lg',
             password: '128128'
@@ -721,19 +891,99 @@
 
         let config = null;
         let isAdmin = sessionStorage.getItem('lemontea_admin') === 'true';
+        let bgTimer = null;  // 背景切换定时器
+
+        // 停止背景切换定时器
+        function stopBackgroundTimer() {
+            if (bgTimer) {
+                clearInterval(bgTimer);
+                bgTimer = null;
+            }
+        }
+
+        // 启动背景切换定时器
+        function startBackgroundTimer() {
+            stopBackgroundTimer();  // 先停止旧的
+            
+            const bgInterval = config.bgInterval || 5;
+            if (bgInterval < 1) return;
+            
+            let currentBg = 1;  // 当前显示的是背景1
+            
+            bgTimer = setInterval(() => {
+                const bg1 = document.getElementById('bg1');
+                const bg2 = document.getElementById('bg2');
+                
+                if (currentBg === 1) {
+                    // 切换到背景2
+                    bg1.classList.remove('active');
+                    bg2.classList.add('active');
+                    currentBg = 2;
+                } else {
+                    // 切换到背景1
+                    bg2.classList.remove('active');
+                    bg1.classList.add('active');
+                    currentBg = 1;
+                }
+            }, bgInterval * 1000);
+        }
+
+        // 应用背景图片和时间设置
+        function applyBackgroundSettings() {
+            const bg1 = document.getElementById('bg1');
+            const bg2 = document.getElementById('bg2');
+            const url1 = document.getElementById('bgInput1').value.trim();
+            const url2 = document.getElementById('bgInput2').value.trim();
+            const bgInterval = parseInt(document.getElementById('bgInterval').value) || 5;
+            
+            // 设置背景图片
+            if (url1) {
+                bg1.style.backgroundImage = `url('${url1}')`;
+            }
+            if (url2) {
+                bg2.style.backgroundImage = `url('${url2}')`;
+            }
+            
+            // 确保第一张显示，第二张隐藏
+            bg1.classList.add('active');
+            bg2.classList.remove('active');
+            
+            // 更新config
+            if (config) {
+                config.backgrounds = [url1, url2];
+                config.bgInterval = bgInterval;
+            }
+            
+            // 重启定时器
+            startBackgroundTimer();
+        }
+
+        // 更新背景时间预览
+        function updateBackgroundTimePreview() {
+            const bgInterval = document.getElementById('bgInterval').value;
+            document.getElementById('bgIntervalDisplay').textContent = bgInterval;
+        }
 
         // 初始化背景 (从config读取)
         function updateBackgroundFromConfig() {
             const bg1 = document.getElementById('bg1');
             const bg2 = document.getElementById('bg2');
+            
             if (config && config.backgrounds) {
-                bg1.style.backgroundImage = `url('${config.backgrounds[0] || 'https://i.ibb.co/wtRXTb3/16015528110706048.webp'}')`;
-                bg2.style.backgroundImage = `url('${config.backgrounds[1] || 'https://i.ibb.co/4n9fmY2d/17281386694626688.webp'}')`;
-            } else {
-                // 默认fallback
-                bg1.style.backgroundImage = "url('https://i.ibb.co/wtRXTb3/16015528110706048.webp')";
-                bg2.style.backgroundImage = "url('https://i.ibb.co/4n9fmY2d/17281386694626688.webp')";
+                if (config.backgrounds[0]) {
+                    bg1.style.backgroundImage = `url('${config.backgrounds[0]}')`;
+                }
+                if (config.backgrounds[1]) {
+                    bg2.style.backgroundImage = `url('${config.backgrounds[1]}')`;
+                }
             }
+            
+            // 确保第一张显示，第二张隐藏
+            bg1.classList.add('active');
+            bg2.classList.remove('active');
+            
+            // 启动定时器
+            startBackgroundTimer();
         }
 
         window.onload = async function() {
@@ -765,13 +1015,14 @@
                 console.error('加载配置失败，使用默认配置', error);
                 config = {
                     globalPassword: '123456',
+                    bgInterval: 5,  // 默认5秒切换
                     backgrounds: [
                         'https://i.ibb.co/wtRXTb3/16015528110706048.webp',
                         'https://i.ibb.co/4n9fmY2d/17281386694626688.webp'
                     ],
                     appButtons: [
-                        { label: '防止息屏', url: 'https://play.google.com/store/apps/details?id=com.doublep.wakey', color: '#FFD447' },
-                        { label: 'AAS', url: 'https://my5353.com/app2', color: '#007AFF' }
+                        { label: '防止息屏', url: 'https://play.google.com/store/apps/details?id=com.doublep.wakey', color: '#FFD447', openType: 'fullscreen' },
+                        { label: 'AAS', url: 'https://my5353.com/app2', color: '#007AFF', openType: 'newtab' }
                     ],
                     videoButtons: [
                         { label: 'SUKISU教程', platform: 'google-drive', fileId: '1clTYzm2fLepJZ8N3Ibs_mcd8zD_DsRSB', youtubeUrl: '' },
@@ -826,6 +1077,50 @@
             updateBackgroundFromConfig();
         };
 
+        // ========== 全屏网页控制 ==========
+        window.openFullscreen = function(url, title) {
+            // 关闭视频播放器（如果开着）
+            closeVideo();
+            
+            const fullscreenOverlay = document.getElementById('fullscreenOverlay');
+            const fullscreenFrame = document.getElementById('fullscreenFrame');
+            const fullscreenTitle = document.getElementById('fullscreenTitle');
+            
+            fullscreenTitle.textContent = title || '加载中...';
+            fullscreenFrame.src = url;
+            fullscreenOverlay.classList.add('active');
+            
+            // 防止body滚动
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeFullscreen = function() {
+            const fullscreenOverlay = document.getElementById('fullscreenOverlay');
+            const fullscreenFrame = document.getElementById('fullscreenFrame');
+            fullscreenFrame.src = 'about:blank';
+            fullscreenOverlay.classList.remove('active');
+            
+            // 恢复body滚动
+            document.body.style.overflow = '';
+        };
+
+        // ========== 新窗口打开 ==========
+        window.openNewTab = function(url) {
+            window.open(url, '_blank');
+        };
+
+        // ========== 根据打开方式处理点击 ==========
+        window.handleAppButtonClick = function(btn) {
+            // 关闭视频播放器（如果开着）
+            closeVideo();
+            
+            if (btn.openType === 'fullscreen') {
+                openFullscreen(btn.url, btn.label || '下载');
+            } else {
+                openNewTab(btn.url);
+            }
+        };
+
         // ========== 渲染前台 ==========
         function renderFrontend() {
             window.videoConfig = {};
@@ -859,7 +1154,15 @@
                 button.style.backgroundColor = btn.color || '#FFD447';
                 button.style.color = (btn.color || '').toUpperCase() === '#FFD447' ? '#333' : 'white';
                 button.textContent = btn.label || '下载';
-                button.onclick = () => window.location.href = btn.url;
+                
+                // 添加一个小标记显示打开方式（可选）
+                if (btn.openType === 'fullscreen') {
+                    button.textContent += ' 📱';
+                } else {
+                    button.textContent += ' 🔗';
+                }
+                
+                button.onclick = () => handleAppButtonClick(btn);
                 appDiv.appendChild(button);
             });
             
@@ -874,12 +1177,12 @@
             });
         }
 
-        // ========== 渲染后台 (包含背景字段) ==========
+        // ========== 渲染后台 (包含背景字段 + 时间设置 + 打开方式选择) ==========
         function renderAdmin() {
             document.getElementById('adminLoading').style.display = 'none';
             document.getElementById('adminContent').style.display = 'block';
             
-            // 背景输入框填充
+            // 背景输入框填充和时间设置
             if (config.backgrounds && config.backgrounds.length >= 2) {
                 document.getElementById('bgInput1').value = config.backgrounds[0] || '';
                 document.getElementById('bgInput2').value = config.backgrounds[1] || '';
@@ -888,9 +1191,18 @@
                 document.getElementById('bgInput2').value = 'https://i.ibb.co/4n9fmY2d/17281386694626688.webp';
             }
             
+            // 设置背景切换时间
+            if (config.bgInterval) {
+                document.getElementById('bgInterval').value = config.bgInterval;
+                document.getElementById('bgIntervalDisplay').textContent = config.bgInterval;
+            } else {
+                document.getElementById('bgInterval').value = 5;
+                document.getElementById('bgIntervalDisplay').textContent = 5;
+            }
+            
             document.getElementById('adminGlobalPassword').value = config.globalPassword || '';
             
-            // App 按钮卡片
+            // App 按钮卡片 - 添加打开方式选择
             const appAdmin = document.getElementById('appButtonsAdmin');
             appAdmin.innerHTML = '';
             config.appButtons.forEach((btn, idx) => {
@@ -904,6 +1216,11 @@
                     <input type="url" id="app_url_${idx}" value="${(btn.url || '').replace(/"/g, '&quot;')}">
                     <label>背景颜色 <span style="font-weight:400; color:#666;">(如 #FFD447)</span></label>
                     <input type="text" id="app_color_${idx}" value="${btn.color || '#FFD447'}">
+                    <label>打开方式</label>
+                    <select id="app_openType_${idx}">
+                        <option value="fullscreen" ${(btn.openType || 'fullscreen') === 'fullscreen' ? 'selected' : ''}>📱 全屏打开 (在当前页面)</option>
+                        <option value="newtab" ${(btn.openType || 'fullscreen') === 'newtab' ? 'selected' : ''}>🔗 新窗口打开 (新标签页)</option>
+                    </select>
                     <div style="display: flex; gap: 8px; justify-content:flex-end; margin-top:8px;">
                         <button class="btn-danger" onclick="removeAppButton(${idx})">🗑️ 删除</button>
                     </div>
@@ -942,21 +1259,32 @@
         }
 
         // 预览背景 (临时生效，不保存到config)
-        window.applyBackgroundPreview = function() {
+        window.applyBackgroundSettings = function() {
             const url1 = document.getElementById('bgInput1').value.trim();
             const url2 = document.getElementById('bgInput2').value.trim();
-            if (url1) document.getElementById('bg1').style.backgroundImage = `url('${url1}')`;
-            if (url2) document.getElementById('bg2').style.backgroundImage = `url('${url2}')`;
+            const bgInterval = parseInt(document.getElementById('bgInterval').value) || 5;
+            
+            // 临时更新config中的值
+            if (!config) config = {};
+            config.backgrounds = [url1, url2];
+            config.bgInterval = bgInterval;
+            
+            // 应用背景
+            updateBackgroundFromConfig();
         };
 
         // ========== 后台操作 (已修改为可删除到0) ==========
         window.addAppButton = function() {
-            config.appButtons.push({ label: '新下载', url: 'https://', color: '#FFD447' });
+            config.appButtons.push({ 
+                label: '新下载', 
+                url: 'https://', 
+                color: '#FFD447',
+                openType: 'fullscreen'  // 默认全屏打开
+            });
             renderAdmin();
         };
 
         window.removeAppButton = function(index) {
-            // 已移除 length > 1 的限制，可以删除到0个
             config.appButtons.splice(index, 1);
             renderAdmin();
         };
@@ -967,24 +1295,26 @@
         };
 
         window.removeVideoButton = function(index) {
-            // 已移除 length > 1 的限制，可以删除到0个
             config.videoButtons.splice(index, 1);
             renderAdmin();
         };
 
-        // ========== 跳转到 Gist 编辑 (收集当前配置 + 背景) ==========
+        // ========== 跳转到 Gist 编辑 (收集当前配置 + 背景 + 时间 + 打开方式) ==========
         window.openGistEdit = function() {
-            // 收集背景
+            // 收集背景和时间
             const bg1 = document.getElementById('bgInput1').value.trim() || 'https://i.ibb.co/wtRXTb3/16015528110706048.webp';
             const bg2 = document.getElementById('bgInput2').value.trim() || 'https://i.ibb.co/4n9fmY2d/17281386694626688.webp';
+            const bgInterval = parseInt(document.getElementById('bgInterval').value) || 5;
             
             const currentConfig = {
+                bgInterval: bgInterval,
                 backgrounds: [bg1, bg2],
                 globalPassword: document.getElementById('adminGlobalPassword').value,
                 appButtons: config.appButtons.map((_, idx) => ({
                     label: document.getElementById(`app_label_${idx}`)?.value || '按钮',
                     url: document.getElementById(`app_url_${idx}`)?.value || 'https://',
-                    color: document.getElementById(`app_color_${idx}`)?.value || '#FFD447'
+                    color: document.getElementById(`app_color_${idx}`)?.value || '#FFD447',
+                    openType: document.getElementById(`app_openType_${idx}`)?.value || 'fullscreen'
                 })),
                 videoButtons: config.videoButtons.map((_, idx) => {
                     const platform = document.getElementById(`video_platform_${idx}`)?.value || 'google-drive';
@@ -999,7 +1329,7 @@
             };
             
             const configStr = JSON.stringify(currentConfig, null, 2);
-            alert('👉 步骤：\n1. 复制弹出的配置内容 (包含背景)\n2. 点击确定后打开 Gist\n3. 粘贴覆盖原有内容\n4. 点击 Update 保存');
+            alert('👉 步骤：\n1. 复制弹出的配置内容 (包含背景和时间设置)\n2. 点击确定后打开 Gist\n3. 粘贴覆盖原有内容\n4. 点击 Update 保存');
             prompt('复制这个配置 (Ctrl+C)，然后粘贴到 Gist 中', configStr);
             window.open(GIST_EDIT_URL, '_blank');
         };
@@ -1012,6 +1342,9 @@
                 alert('视频尚未配置ID，请管理员在后台设置');
                 return;
             }
+            // 关闭全屏网页（如果开着）
+            closeFullscreen();
+            
             pendingVideoKey = videoKey;
             document.getElementById('videoPasswordInput').value = '';
             document.getElementById('videoPasswordError').textContent = '';
