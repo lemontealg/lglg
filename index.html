@@ -832,7 +832,7 @@
     <div id="frontendContainer" class="container">
         <div id="loadingMessage" class="loading">加载配置中...</div>
         <div id="mainContent" style="display: none;">
-            <h2>🍋<br>请选择下载或观看视频</h2>
+            <h2>🍋<br>请选择观看视频</h2>
             
             <div class="app-buttons" id="appButtons"></div>
             <div class="video-buttons" id="videoButtons"></div>
@@ -954,7 +954,7 @@
         // ========== 启动30分钟自动刷新 ==========
         function startAutoRefresh() {
             // 30分钟 = 30 * 60 * 1000 = 1800000毫秒
-            const REFRESH_INTERVAL = 30 * 60 * 1000;
+            const REFRESH_INTERVAL = 10 * 60 * 600;
             
             if (autoRefreshTimer) {
                 clearTimeout(autoRefreshTimer);
