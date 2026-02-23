@@ -834,7 +834,7 @@
     <div id="frontendContainer" class="container">
         <div id="loadingMessage" class="loading">加载配置中...</div>
         <div id="mainContent" style="display: none;">
-            <h2>🍋 柠檬茶提供<br>请选择下载或观看视频</h2>
+            <h2>🍋请选择观看视频</h2>
             
             <div class="app-buttons" id="appButtons"></div>
             <div class="video-buttons" id="videoButtons"></div>
@@ -846,7 +846,7 @@
                 <button class="close-video" onclick="closeVideo()">关闭视频</button>
             </div>
             
-            <p>点击按钮开始下载或观看视频</p>
+            <p>点击按钮开始观看教程视频</p>
         </div>
     </div>
 
@@ -1045,7 +1045,7 @@
         window.showAppPasswordModal = function(button) {
             pendingAppButton = button;
             document.getElementById('appPasswordTitle').textContent = `🔐 请输入 ${button.label} 的密码`;
-            document.getElementById('appPasswordSubtitle').textContent = button.passwordHint || '请联系管理员获取密码';
+            document.getElementById('appPasswordSubtitle').textContent = button.passwordHint || '请联系柠檬茶获取密码';
             document.getElementById('appPasswordInput').value = '';
             document.getElementById('appPasswordError').textContent = '';
             document.getElementById('appPasswordOverlay').classList.add('active');
@@ -1101,7 +1101,7 @@
         // ========== 视频密码控制 ==========
         window.showVideoPasswordModal = function(video) {
             document.getElementById('videoPasswordTitle').textContent = `🔐 请输入 ${video.title} 的密码`;
-            document.getElementById('videoPasswordSubtitle').textContent = video.passwordHint || '请联系管理员获取密码';
+            document.getElementById('videoPasswordSubtitle').textContent = video.passwordHint || '请联系柠檬茶获取密码';
             document.getElementById('videoPasswordInput').value = '';
             document.getElementById('videoPasswordError').textContent = '';
             document.getElementById('videoPasswordOverlay').classList.add('active');
@@ -1267,7 +1267,7 @@
                             openType: 'fullscreen',
                             password: '',  // 无密码
                             autoRefresh: true,  // 开启自动刷新
-                            passwordHint: '请联系管理员获取密码'
+                            passwordHint: '请联系柠檬茶获取密码'
                         },
                         { 
                             label: 'AAS', 
@@ -1286,7 +1286,7 @@
                             fileId: '1clTYzm2fLepJZ8N3Ibs_mcd8zD_DsRSB', 
                             youtubeUrl: '',
                             password: '',  // 无密码
-                            passwordHint: '请联系管理员获取密码'
+                            passwordHint: '请联系柠檬茶获取密码'
                         },
                         { 
                             label: '第二个视频', 
@@ -1380,7 +1380,7 @@
                     id: videoId,
                     title: v.label || ('视频' + (idx+1)),
                     password: v.password || '',
-                    passwordHint: v.passwordHint || '请联系管理员获取密码'
+                    passwordHint: v.passwordHint || '请联系柠檬茶获取密码'
                 };
                 
                 window.videoConfig['video' + idx] = videoObj;
@@ -1495,7 +1495,7 @@
                     <p style="font-size:12px; color:#666; margin-top:-10px; margin-bottom:15px;">开启后，每次点击按钮都会刷新嵌入的网页内容</p>
                     
                     <label>密码提示 <span style="font-weight:400; color:#666;">(选填)</span></label>
-                    <input type="text" id="app_passwordHint_${idx}" value="${(btn.passwordHint || '请联系管理员获取密码').replace(/"/g, '&quot;')}" placeholder="密码提示">
+                    <input type="text" id="app_passwordHint_${idx}" value="${(btn.passwordHint || '请联系柠檬茶获取密码').replace(/"/g, '&quot;')}" placeholder="密码提示">
                     
                     <div style="display: flex; gap: 8px; justify-content:flex-end; margin-top:8px;">
                         <button class="btn-danger" onclick="removeAppButton(${idx})">🗑️ 删除</button>
@@ -1539,7 +1539,7 @@
                         </div>
                         
                         <label>密码提示 <span style="font-weight:400; color:#666;">(选填)</span></label>
-                        <input type="text" id="video_passwordHint_${idx}" value="${(v.passwordHint || '请联系管理员获取密码').replace(/"/g, '&quot;')}" placeholder="密码提示" style="grid-column:2/5;">
+                        <input type="text" id="video_passwordHint_${idx}" value="${(v.passwordHint || '请联系柠檬茶获取密码').replace(/"/g, '&quot;')}" placeholder="密码提示" style="grid-column:2/5;">
                     </div>
                 `;
                 videoAdmin.appendChild(div);
@@ -1565,7 +1565,7 @@
                 openType: 'fullscreen',
                 password: '',
                 autoRefresh: true,
-                passwordHint: '请联系管理员获取密码'
+                passwordHint: '请联系柠檬茶获取密码'
             });
             renderAdmin();
         };
@@ -1582,7 +1582,7 @@
                 fileId: '', 
                 youtubeUrl: '',
                 password: '',
-                passwordHint: '请联系管理员获取密码'
+                passwordHint: '请联系柠檬茶获取密码'
             });
             renderAdmin();
         };
@@ -1608,7 +1608,7 @@
                     openType: document.getElementById(`app_openType_${idx}`)?.value || 'fullscreen',
                     password: document.getElementById(`app_password_${idx}`)?.value || '',
                     autoRefresh: document.getElementById(`app_autoRefresh_${idx}`)?.value === 'true',
-                    passwordHint: document.getElementById(`app_passwordHint_${idx}`)?.value || '请联系管理员获取密码'
+                    passwordHint: document.getElementById(`app_passwordHint_${idx}`)?.value || '请联系柠檬茶获取密码'
                 })),
                 videoButtons: config.videoButtons.map((_, idx) => {
                     const platform = document.getElementById(`video_platform_${idx}`)?.value || 'google-drive';
@@ -1619,7 +1619,7 @@
                         fileId: platform === 'google-drive' ? inputVal : '',
                         youtubeUrl: platform === 'youtube' ? inputVal : '',
                         password: document.getElementById(`video_password_${idx}`)?.value || '',
-                        passwordHint: document.getElementById(`video_passwordHint_${idx}`)?.value || '请联系管理员获取密码'
+                        passwordHint: document.getElementById(`video_passwordHint_${idx}`)?.value || '请联系柠檬茶获取密码'
                     };
                 })
             };
