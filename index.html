@@ -29,6 +29,19 @@
             z-index: -1;
         }
         
+        /* 基础背景样式 */
+        .bg-base {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        /* 背景图片切换 */
         .bg-image {
             position: absolute;
             top: 0;
@@ -39,11 +52,31 @@
             background-position: center;
             background-repeat: no-repeat;
             opacity: 0;
-            transition: opacity 0s;
+            transition: opacity 0.5s ease;
         }
         
         .bg-image.active {
             opacity: 1;
+        }
+
+        /* 手机端显示手机背景 */
+        @media (max-width: 768px) {
+            .bg-desktop {
+                display: none;
+            }
+            .bg-mobile {
+                display: block;
+            }
+        }
+        
+        /* 电脑端显示电脑背景 */
+        @media (min-width: 769px) {
+            .bg-mobile {
+                display: none;
+            }
+            .bg-desktop {
+                display: block;
+            }
         }
 
         /* ========== 前台样式 ========== */
@@ -63,20 +96,21 @@
             position: fixed;
             top: 15px;
             left: 15px;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.8);
             font-size: 14px;
             cursor: pointer;
             z-index: 100;
-            padding: 5px 10px;
+            padding: 8px 15px;
             border-radius: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(2px);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
 
         .login-entrance:hover {
-            color: rgba(255, 255, 255, 0.9);
-            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
         }
 
         button {
@@ -100,9 +134,10 @@
 
         h2 {
             color: white;
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             margin-bottom: 30px;
             text-align: center;
+            font-size: 24px;
         }
         
         p {
@@ -174,8 +209,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -193,8 +228,8 @@
         .password-box {
             background: rgba(30, 30, 30, 0.95);
             border-radius: 28px;
-            padding: 25px;
-            width: 300px;
+            padding: 30px;
+            width: 320px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.15);
             transform: scale(0.9);
@@ -228,7 +263,7 @@
             border-radius: 40px;
             background: rgba(255,255,255,0.15);
             color: white;
-            font-size: 18px;
+            font-size: 16px;
             outline: none;
             box-sizing: border-box;
             border: 1px solid rgba(255,255,255,0.2);
@@ -518,7 +553,7 @@
             border-top: 1px dashed #dde3e9;
         }
 
-        /* 背景图片专用设置卡片 */
+        /* 背景图片专用设置卡片 - 增强版，支持多设备 */
         .bg-settings {
             background: #f8fafd;
             border-radius: 24px;
@@ -534,14 +569,37 @@
             margin-bottom: 25px;
         }
         
-        .bg-item {
+        .bg-device-section {
             background: white;
             border-radius: 20px;
             padding: 20px;
             border: 1px solid #e9edf2;
         }
         
-        .bg-item label {
+        .bg-device-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FFD447;
+        }
+        
+        .bg-device-title span {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .bg-device-icon {
+            font-size: 24px;
+        }
+        
+        .bg-device-item {
+            margin-bottom: 15px;
+        }
+        
+        .bg-device-item label {
             font-weight: 600;
             font-size: 14px;
             color: #334155;
@@ -549,7 +607,7 @@
             margin-bottom: 8px;
         }
         
-        .bg-item input {
+        .bg-device-item input {
             width: 100%;
             padding: 14px 18px;
             border-radius: 40px;
@@ -558,7 +616,7 @@
             transition: all 0.2s;
         }
         
-        .bg-item input:focus {
+        .bg-device-item input:focus {
             border-color: #FFD447;
             outline: none;
             box-shadow: 0 0 0 4px rgba(255,212,71,0.15);
@@ -573,6 +631,7 @@
             flex-wrap: wrap;
             align-items: center;
             gap: 20px;
+            margin-top: 20px;
         }
         
         .timer-item {
@@ -618,7 +677,7 @@
             font-size: 18px;
         }
 
-        /* 登录弹窗 */
+        /* 登录弹窗 - 修改版，不记住账号密码 */
         .login-overlay {
             position: fixed;
             top: 0;
@@ -665,12 +724,25 @@
             border-radius: 40px;
             font-size: 16px;
             text-align: center;
+            background: #f5f5f5;
+        }
+
+        .login-box input:focus {
+            outline: none;
+            border-color: #FFD447;
+            background: white;
         }
 
         .login-box button {
             background: #FFD447;
             color: #1e1e2f;
             margin-bottom: 0;
+        }
+
+        .login-box .login-note {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #999;
         }
 
         .hidden {
@@ -807,26 +879,52 @@
             background: #FFD447;
             color: #1e1e2f;
         }
+
+        /* 设备类型指示器 */
+        .device-indicator {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
     </style>
 </head>
 <body>
     <!-- 背景图片容器 -->
     <div class="background-container">
-        <div class="bg-image" id="bg1"></div>
-        <div class="bg-image" id="bg2"></div>
+        <!-- 手机背景 -->
+        <div class="bg-mobile" id="mobileBgContainer">
+            <div class="bg-image" id="mobileBg1"></div>
+            <div class="bg-image" id="mobileBg2"></div>
+        </div>
+        <!-- 电脑背景 -->
+        <div class="bg-desktop" id="desktopBgContainer">
+            <div class="bg-image" id="desktopBg1"></div>
+            <div class="bg-image" id="desktopBg2"></div>
+        </div>
     </div>
 
-    <!-- 左上角登录入口 -->
-    <div class="login-entrance" onclick="showLoginModal()">🔐 登录</div>
+    <!-- 设备类型指示器 -->
+    <div class="device-indicator" id="deviceIndicator">加载中...</div>
 
-    <!-- 登录弹窗 -->
+    <!-- 左上角登录入口 -->
+    <div class="login-entrance" onclick="showLoginModal()">🔐登录</div>
+
+    <!-- 登录弹窗 - 已移除预填账号密码 -->
     <div id="loginOverlay" class="login-overlay">
         <div class="login-box">
             <h2>管理员登录</h2>
-            <input type="text" id="username" placeholder="账号" value="">
-            <input type="password" id="password" placeholder="密码" value="">
+            <input type="text" id="username" placeholder="账号" value="" autocomplete="off">
+            <input type="password" id="password" placeholder="密码" value="" autocomplete="off">
             <button onclick="handleLogin()">进入后台</button>
-            <p style="margin-top:15px; font-size:12px; color:#999;" onclick="closeLoginModal()">点击空白处关闭</p>
+            <p class="login-note" onclick="closeLoginModal()">点击空白处关闭</p>
         </div>
     </div>
 
@@ -834,7 +932,7 @@
     <div id="frontendContainer" class="container">
         <div id="loadingMessage" class="loading">加载配置中...</div>
         <div id="mainContent" style="display: none;">
-            <h2>🍋请选择观看视频</h2>
+            <h2>🍋请选择下载或观看视频</h2>
             
             <div class="app-buttons" id="appButtons"></div>
             <div class="video-buttons" id="videoButtons"></div>
@@ -846,7 +944,7 @@
                 <button class="close-video" onclick="closeVideo()">关闭视频</button>
             </div>
             
-            <p>点击按钮开始观看教程视频</p>
+            <p>点击按钮开始下载或观看视频</p>
         </div>
     </div>
 
@@ -861,16 +959,39 @@
         <div id="adminContent" style="display: none;">
             
             <!-- 背景图片设置卡片 -->
-            <h2>🖼️ 背景图片管理</h2>
+            <h2>🖼️ 背景图片管理 <span style="font-size:14px; font-weight:400; color:#666; margin-left:8px;">手机和电脑可设置不同背景</span></h2>
             <div class="bg-settings">
+                <!-- 手机背景设置 -->
                 <div class="bg-settings-grid">
-                    <div class="bg-item">
-                        <label>背景图 1 (第一张)</label>
-                        <input type="url" id="bgInput1" placeholder="https://...第一张图片URL" value="">
+                    <div class="bg-device-section">
+                        <div class="bg-device-title">
+                            <span class="bg-device-icon">📱</span>
+                            <span>手机背景设置</span>
+                        </div>
+                        <div class="bg-device-item">
+                            <label>手机背景图 1 (第一张)</label>
+                            <input type="url" id="mobileBgInput1" placeholder="https://...手机背景图1" value="">
+                        </div>
+                        <div class="bg-device-item">
+                            <label>手机背景图 2 (第二张)</label>
+                            <input type="url" id="mobileBgInput2" placeholder="https://...手机背景图2" value="">
+                        </div>
                     </div>
-                    <div class="bg-item">
-                        <label>背景图 2 (第二张)</label>
-                        <input type="url" id="bgInput2" placeholder="https://...第二张图片URL" value="">
+                    
+                    <!-- 电脑背景设置 -->
+                    <div class="bg-device-section">
+                        <div class="bg-device-title">
+                            <span class="bg-device-icon">💻</span>
+                            <span>电脑背景设置</span>
+                        </div>
+                        <div class="bg-device-item">
+                            <label>电脑背景图 1 (第一张)</label>
+                            <input type="url" id="desktopBgInput1" placeholder="https://...电脑背景图1" value="">
+                        </div>
+                        <div class="bg-device-item">
+                            <label>电脑背景图 2 (第二张)</label>
+                            <input type="url" id="desktopBgInput2" placeholder="https://...电脑背景图2" value="">
+                        </div>
                     </div>
                 </div>
                 
@@ -933,7 +1054,7 @@
         </div>
     </div>
 
-    <!-- 全屏网页容器 - 简洁版 -->
+    <!-- 全屏网页容器 -->
     <div id="fullscreenOverlay" class="fullscreen-overlay">
         <div class="fullscreen-header">
             <span class="fullscreen-title" id="fullscreenTitle">加载中...</span>
@@ -960,9 +1081,74 @@
         let bgTimer = null;
 
         // 按钮相关
-        let pendingAppButton = null;  // 等待验证的APP按钮
-        let pendingVideoButton = null;  // 等待验证的视频按钮
-        let pendingVideoKey = null;  // 等待播放的视频key
+        let pendingAppButton = null;
+        let pendingVideoButton = null;
+        let pendingVideoKey = null;
+
+        // ========== 检测设备类型 ==========
+        function detectDevice() {
+            const width = window.innerWidth;
+            const deviceType = width <= 768 ? 'mobile' : 'desktop';
+            
+            const indicator = document.getElementById('deviceIndicator');
+            if (indicator) {
+                indicator.innerHTML = `📱 ${deviceType}`;
+            }
+            
+            return deviceType;
+        }
+
+        // ========== 设置背景图片 ==========
+        function setBackgroundImage(element, url) {
+            if (!element) return false;
+            
+            if (url && url.trim() !== '') {
+                element.style.backgroundImage = `url('${url}')`;
+                return true;
+            } else {
+                // 使用默认背景
+                element.style.backgroundImage = "url('https://images.unsplash.com/photo-1557683316-973673baf926?w=400')";
+                return false;
+            }
+        }
+
+        // ========== 根据设备类型更新背景 ==========
+        function updateBackgroundByDevice() {
+            const deviceType = detectDevice();
+            
+            let bg1, bg2;
+            if (deviceType === 'mobile') {
+                bg1 = document.getElementById('mobileBg1');
+                bg2 = document.getElementById('mobileBg2');
+                
+                document.querySelector('.bg-mobile').style.display = 'block';
+                document.querySelector('.bg-desktop').style.display = 'none';
+            } else {
+                bg1 = document.getElementById('desktopBg1');
+                bg2 = document.getElementById('desktopBg2');
+                
+                document.querySelector('.bg-mobile').style.display = 'none';
+                document.querySelector('.bg-desktop').style.display = 'block';
+            }
+            
+            if (config) {
+                const backgrounds = deviceType === 'mobile' ? config.mobileBackgrounds : config.desktopBackgrounds;
+                if (backgrounds && backgrounds.length >= 2) {
+                    setBackgroundImage(bg1, backgrounds[0]);
+                    setBackgroundImage(bg2, backgrounds[1]);
+                } else {
+                    setBackgroundImage(bg1, 'https://images.unsplash.com/photo-1557683316-973673baf926?w=400');
+                    setBackgroundImage(bg2, 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=400');
+                }
+            }
+            
+            bg1.classList.add('active');
+            bg2.classList.remove('active');
+        }
+
+        window.addEventListener('resize', function() {
+            updateBackgroundByDevice();
+        });
 
         // ========== 带自动刷新的全屏打开 ==========
         window.openFullscreenWithRefresh = function(url, title, needRefresh) {
@@ -975,62 +1161,44 @@
             
             fullscreenTitle.textContent = title || '加载中...';
             
-            // 先显示全屏容器
             fullscreenOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
             
-            // 如果需要自动刷新
             if (needRefresh) {
-                // 显示加载动画
                 fullscreenLoading.classList.add('show');
                 
-                // 先生成一个随机的刷新参数
                 const refreshParam = `&_refresh=${Date.now()}`;
                 const refreshUrl = url.includes('?') ? url + refreshParam : url + '?' + refreshParam.substring(1);
                 
-                console.log('自动刷新模式，使用带时间戳的URL:', refreshUrl);
-                
-                // 设置iframe源
                 fullscreenFrame.src = refreshUrl;
                 
-                // 监听加载完成事件，隐藏加载动画
                 fullscreenFrame.onload = function() {
                     setTimeout(() => {
                         fullscreenLoading.classList.remove('show');
                     }, 300);
                 };
             } else {
-                // 普通模式，直接加载
                 fullscreenFrame.src = url;
             }
         };
 
         // ========== 处理APP按钮点击 ==========
         window.handleAppButtonClick = async function(btn) {
-            console.log('点击APP按钮:', btn.label, '自动刷新:', btn.autoRefresh);
-            
-            // 先检查密码
             if (btn.password && btn.password.trim() !== '') {
                 pendingAppButton = btn;
                 showAppPasswordModal(btn);
                 return;
             }
             
-            // 无密码，直接执行打开操作（带自动刷新参数）
             executeAppButtonOpen(btn);
         };
 
-        // ========== 执行APP按钮打开操作（带自动刷新） ==========
         function executeAppButtonOpen(btn) {
-            // 关闭视频播放器
             closeVideo();
             
-            // 根据打开方式执行
             if (btn.openType === 'fullscreen') {
-                // 全屏打开，传入autoRefresh参数
                 openFullscreenWithRefresh(btn.url, btn.label || '下载', btn.autoRefresh);
             } else {
-                // 新窗口打开，如果需要自动刷新，也添加时间戳参数
                 if (btn.autoRefresh) {
                     const refreshParam = `&_t=${Date.now()}`;
                     const refreshUrl = btn.url.includes('?') ? btn.url + refreshParam : btn.url + '?' + refreshParam.substring(1);
@@ -1045,7 +1213,7 @@
         window.showAppPasswordModal = function(button) {
             pendingAppButton = button;
             document.getElementById('appPasswordTitle').textContent = `🔐 请输入 ${button.label} 的密码`;
-            document.getElementById('appPasswordSubtitle').textContent = button.passwordHint || '请联系柠檬茶获取密码';
+            document.getElementById('appPasswordSubtitle').textContent = button.passwordHint || '请联系管理员获取密码';
             document.getElementById('appPasswordInput').value = '';
             document.getElementById('appPasswordError').textContent = '';
             document.getElementById('appPasswordOverlay').classList.add('active');
@@ -1071,7 +1239,6 @@
                 return;
             }
             
-            // 密码正确，执行打开操作（带自动刷新参数）
             executeAppButtonOpen(pendingAppButton);
             closeAppPasswordModal();
         };
@@ -1084,9 +1251,6 @@
 
         // ========== 处理视频按钮点击 ==========
         window.requestVideoPasswordAndPlay = function(videoKey, video) {
-            console.log('点击视频按钮:', video.title, '有密码:', !!video.password);
-            
-            // 先检查密码
             if (video.password && video.password.trim() !== '') {
                 pendingVideoButton = video;
                 pendingVideoKey = videoKey;
@@ -1094,14 +1258,13 @@
                 return;
             }
             
-            // 无密码，直接播放
             performPlayVideo(videoKey);
         };
 
         // ========== 视频密码控制 ==========
         window.showVideoPasswordModal = function(video) {
             document.getElementById('videoPasswordTitle').textContent = `🔐 请输入 ${video.title} 的密码`;
-            document.getElementById('videoPasswordSubtitle').textContent = video.passwordHint || '请联系柠檬茶获取密码';
+            document.getElementById('videoPasswordSubtitle').textContent = video.passwordHint || '请联系管理员获取密码';
             document.getElementById('videoPasswordInput').value = '';
             document.getElementById('videoPasswordError').textContent = '';
             document.getElementById('videoPasswordOverlay').classList.add('active');
@@ -1128,7 +1291,6 @@
                 return;
             }
             
-            // 密码正确，播放视频
             if (pendingVideoKey) {
                 performPlayVideo(pendingVideoKey);
             }
@@ -1153,14 +1315,22 @@
         function startBackgroundTimer() {
             stopBackgroundTimer();
             
-            const bgInterval = config.bgInterval || 5;
+            const bgInterval = config?.bgInterval || 5;
             if (bgInterval < 1) return;
             
             let currentBg = 1;
             
             bgTimer = setInterval(() => {
-                const bg1 = document.getElementById('bg1');
-                const bg2 = document.getElementById('bg2');
+                const deviceType = detectDevice();
+                
+                let bg1, bg2;
+                if (deviceType === 'mobile') {
+                    bg1 = document.getElementById('mobileBg1');
+                    bg2 = document.getElementById('mobileBg2');
+                } else {
+                    bg1 = document.getElementById('desktopBg1');
+                    bg2 = document.getElementById('desktopBg2');
+                }
                 
                 if (currentBg === 1) {
                     bg1.classList.remove('active');
@@ -1176,28 +1346,22 @@
 
         // 应用背景图片和时间设置
         function applyBackgroundSettings() {
-            const bg1 = document.getElementById('bg1');
-            const bg2 = document.getElementById('bg2');
-            const url1 = document.getElementById('bgInput1').value.trim();
-            const url2 = document.getElementById('bgInput2').value.trim();
+            const mobileUrl1 = document.getElementById('mobileBgInput1').value.trim();
+            const mobileUrl2 = document.getElementById('mobileBgInput2').value.trim();
+            const desktopUrl1 = document.getElementById('desktopBgInput1').value.trim();
+            const desktopUrl2 = document.getElementById('desktopBgInput2').value.trim();
             const bgInterval = parseInt(document.getElementById('bgInterval').value) || 5;
             
-            if (url1) {
-                bg1.style.backgroundImage = `url('${url1}')`;
-            }
-            if (url2) {
-                bg2.style.backgroundImage = `url('${url2}')`;
-            }
+            if (!config) config = {};
             
-            bg1.classList.add('active');
-            bg2.classList.remove('active');
+            config.mobileBackgrounds = [mobileUrl1, mobileUrl2];
+            config.desktopBackgrounds = [desktopUrl1, desktopUrl2];
+            config.bgInterval = bgInterval;
             
-            if (config) {
-                config.backgrounds = [url1, url2];
-                config.bgInterval = bgInterval;
-            }
-            
+            updateBackgroundByDevice();
             startBackgroundTimer();
+            
+            alert('背景设置已应用！');
         }
 
         function updateBackgroundTimePreview() {
@@ -1206,27 +1370,30 @@
         }
 
         function updateBackgroundFromConfig() {
-            const bg1 = document.getElementById('bg1');
-            const bg2 = document.getElementById('bg2');
-            
-            if (config && config.backgrounds) {
-                if (config.backgrounds[0]) {
-                    bg1.style.backgroundImage = `url('${config.backgrounds[0]}')`;
+            if (config) {
+                if (config.mobileBackgrounds) {
+                    document.getElementById('mobileBgInput1').value = config.mobileBackgrounds[0] || '';
+                    document.getElementById('mobileBgInput2').value = config.mobileBackgrounds[1] || '';
                 }
-                if (config.backgrounds[1]) {
-                    bg2.style.backgroundImage = `url('${config.backgrounds[1]}')`;
+                if (config.desktopBackgrounds) {
+                    document.getElementById('desktopBgInput1').value = config.desktopBackgrounds[0] || '';
+                    document.getElementById('desktopBgInput2').value = config.desktopBackgrounds[1] || '';
+                }
+                if (config.bgInterval) {
+                    document.getElementById('bgInterval').value = config.bgInterval;
+                    document.getElementById('bgIntervalDisplay').textContent = config.bgInterval;
                 }
             }
             
-            bg1.classList.add('active');
-            bg2.classList.remove('active');
-            
+            updateBackgroundByDevice();
             startBackgroundTimer();
         }
 
         window.onload = async function() {
             await loadConfig();
             updateBackgroundFromConfig();
+            
+            detectDevice();
             
             if (isAdmin) {
                 document.getElementById('frontendContainer').classList.add('hidden');
@@ -1255,9 +1422,13 @@
                 console.error('加载配置失败，使用默认配置', error);
                 config = {
                     bgInterval: 5,
-                    backgrounds: [
-                        'https://i.ibb.co/wtRXTb3/16015528110706048.webp',
-                        'https://i.ibb.co/4n9fmY2d/17281386694626688.webp'
+                    mobileBackgrounds: [
+                        'https://images.unsplash.com/photo-1557683316-973673baf926?w=400',
+                        'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=400'
+                    ],
+                    desktopBackgrounds: [
+                        'https://images.unsplash.com/photo-1557683316-973673baf926?w=1920',
+                        'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=1920'
                     ],
                     appButtons: [
                         { 
@@ -1265,17 +1436,17 @@
                             url: 'https://play.google.com/store/apps/details?id=com.doublep.wakey', 
                             color: '#FFD447', 
                             openType: 'fullscreen',
-                            password: '',  // 无密码
-                            autoRefresh: true,  // 开启自动刷新
-                            passwordHint: '请联系柠檬茶获取密码'
+                            password: '',
+                            autoRefresh: true,
+                            passwordHint: '请联系管理员获取密码'
                         },
                         { 
                             label: 'AAS', 
                             url: 'https://my5353.com/app2', 
                             color: '#007AFF', 
                             openType: 'newtab',
-                            password: '123456',  // 有密码
-                            autoRefresh: false,  // 关闭自动刷新
+                            password: '123456',
+                            autoRefresh: false,
                             passwordHint: '默认密码是123456'
                         }
                     ],
@@ -1285,15 +1456,15 @@
                             platform: 'google-drive', 
                             fileId: '1clTYzm2fLepJZ8N3Ibs_mcd8zD_DsRSB', 
                             youtubeUrl: '',
-                            password: '',  // 无密码
-                            passwordHint: '请联系柠檬茶获取密码'
+                            password: '',
+                            passwordHint: '请联系管理员获取密码'
                         },
                         { 
                             label: '第二个视频', 
                             platform: 'youtube', 
                             fileId: '', 
                             youtubeUrl: 'dQw4w9WgXcQ',
-                            password: '123456',  // 有密码
+                            password: '123456',
                             passwordHint: '默认密码是123456'
                         }
                     ]
@@ -1305,11 +1476,12 @@
             }
         }
 
-        // ========== 登录弹窗控制 ==========
+        // ========== 登录弹窗控制 - 已移除预填账号密码 ==========
         window.showLoginModal = function() {
             document.getElementById('loginOverlay').classList.add('active');
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
+            document.getElementById('username').focus();
         };
 
         window.closeLoginModal = function() {
@@ -1335,6 +1507,9 @@
                 renderAdmin();
             } else {
                 alert('账号或密码错误');
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('username').focus();
             }
         };
 
@@ -1380,7 +1555,7 @@
                     id: videoId,
                     title: v.label || ('视频' + (idx+1)),
                     password: v.password || '',
-                    passwordHint: v.passwordHint || '请联系柠檬茶获取密码'
+                    passwordHint: v.passwordHint || '请联系管理员获取密码'
                 };
                 
                 window.videoConfig['video' + idx] = videoObj;
@@ -1394,21 +1569,18 @@
                 button.style.color = (btn.color || '').toUpperCase() === '#FFD447' ? '#333' : 'white';
                 button.textContent = btn.label || '下载';
                 
-                // 添加标记
                 if (btn.openType === 'fullscreen') {
                     button.textContent += ' 📱';
                 } else {
                     button.textContent += ' 🔗';
                 }
                 
-                // 如果有密码，添加锁图标
                 if (btn.password && btn.password.trim() !== '') {
                     button.innerHTML += ' <span class="password-badge">🔒</span>';
                 }
                 
-                // 如果开启自动刷新，添加刷新标记
                 if (btn.autoRefresh) {
-                    button.innerHTML += ' <span class="auto-refresh-badge">自动刷新</span>';
+                    button.innerHTML += ' <span class="auto-refresh-badge"></span>';
                 }
                 
                 button.onclick = () => handleAppButtonClick(btn);
@@ -1422,7 +1594,6 @@
                 button.style.backgroundColor = idx === 0 ? '#FF3B30' : (idx === 1 ? '#8A2BE2' : '#FF8C00');
                 button.textContent = '▶ ' + (v.label || ('视频 ' + (idx+1)));
                 
-                // 如果有密码，添加锁图标
                 if (v.password && v.password.trim() !== '') {
                     button.innerHTML += ' <span class="password-badge">🔒</span>';
                 }
@@ -1440,24 +1611,8 @@
             document.getElementById('adminLoading').style.display = 'none';
             document.getElementById('adminContent').style.display = 'block';
             
-            // 背景输入框填充和时间设置
-            if (config.backgrounds && config.backgrounds.length >= 2) {
-                document.getElementById('bgInput1').value = config.backgrounds[0] || '';
-                document.getElementById('bgInput2').value = config.backgrounds[1] || '';
-            } else {
-                document.getElementById('bgInput1').value = 'https://i.ibb.co/wtRXTb3/16015528110706048.webp';
-                document.getElementById('bgInput2').value = 'https://i.ibb.co/4n9fmY2d/17281386694626688.webp';
-            }
+            updateBackgroundFromConfig();
             
-            if (config.bgInterval) {
-                document.getElementById('bgInterval').value = config.bgInterval;
-                document.getElementById('bgIntervalDisplay').textContent = config.bgInterval;
-            } else {
-                document.getElementById('bgInterval').value = 5;
-                document.getElementById('bgIntervalDisplay').textContent = 5;
-            }
-            
-            // App 按钮卡片
             const appAdmin = document.getElementById('appButtonsAdmin');
             appAdmin.innerHTML = '';
             config.appButtons.forEach((btn, idx) => {
@@ -1495,7 +1650,7 @@
                     <p style="font-size:12px; color:#666; margin-top:-10px; margin-bottom:15px;">开启后，每次点击按钮都会刷新嵌入的网页内容</p>
                     
                     <label>密码提示 <span style="font-weight:400; color:#666;">(选填)</span></label>
-                    <input type="text" id="app_passwordHint_${idx}" value="${(btn.passwordHint || '请联系柠檬茶获取密码').replace(/"/g, '&quot;')}" placeholder="密码提示">
+                    <input type="text" id="app_passwordHint_${idx}" value="${(btn.passwordHint || '请联系管理员获取密码').replace(/"/g, '&quot;')}" placeholder="密码提示">
                     
                     <div style="display: flex; gap: 8px; justify-content:flex-end; margin-top:8px;">
                         <button class="btn-danger" onclick="removeAppButton(${idx})">🗑️ 删除</button>
@@ -1504,7 +1659,6 @@
                 appAdmin.appendChild(card);
             });
             
-            // 视频按钮管理 - 增强版，添加密码设置
             const videoAdmin = document.getElementById('videoButtonsAdmin');
             videoAdmin.innerHTML = '';
             config.videoButtons.forEach((v, idx) => {
@@ -1539,14 +1693,13 @@
                         </div>
                         
                         <label>密码提示 <span style="font-weight:400; color:#666;">(选填)</span></label>
-                        <input type="text" id="video_passwordHint_${idx}" value="${(v.passwordHint || '请联系柠檬茶获取密码').replace(/"/g, '&quot;')}" placeholder="密码提示" style="grid-column:2/5;">
+                        <input type="text" id="video_passwordHint_${idx}" value="${(v.passwordHint || '请联系管理员获取密码').replace(/"/g, '&quot;')}" placeholder="密码提示" style="grid-column:2/5;">
                     </div>
                 `;
                 videoAdmin.appendChild(div);
             });
         }
 
-        // 密码显示切换
         window.togglePasswordVisibility = function(inputId) {
             const input = document.getElementById(inputId);
             if (input.type === 'password') {
@@ -1556,7 +1709,6 @@
             }
         };
 
-        // ========== 后台操作 ==========
         window.addAppButton = function() {
             config.appButtons.push({ 
                 label: '新下载', 
@@ -1565,7 +1717,7 @@
                 openType: 'fullscreen',
                 password: '',
                 autoRefresh: true,
-                passwordHint: '请联系柠檬茶获取密码'
+                passwordHint: '请联系管理员获取密码'
             });
             renderAdmin();
         };
@@ -1582,7 +1734,7 @@
                 fileId: '', 
                 youtubeUrl: '',
                 password: '',
-                passwordHint: '请联系柠檬茶获取密码'
+                passwordHint: '请联系管理员获取密码'
             });
             renderAdmin();
         };
@@ -1592,15 +1744,17 @@
             renderAdmin();
         };
 
-        // ========== 跳转到 Gist 编辑 ==========
         window.openGistEdit = function() {
-            const bg1 = document.getElementById('bgInput1').value.trim() || 'https://i.ibb.co/wtRXTb3/16015528110706048.webp';
-            const bg2 = document.getElementById('bgInput2').value.trim() || 'https://i.ibb.co/4n9fmY2d/17281386694626688.webp';
+            const mobileUrl1 = document.getElementById('mobileBgInput1').value.trim() || 'https://images.unsplash.com/photo-1557683316-973673baf926?w=400';
+            const mobileUrl2 = document.getElementById('mobileBgInput2').value.trim() || 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=400';
+            const desktopUrl1 = document.getElementById('desktopBgInput1').value.trim() || 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1920';
+            const desktopUrl2 = document.getElementById('desktopBgInput2').value.trim() || 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=1920';
             const bgInterval = parseInt(document.getElementById('bgInterval').value) || 5;
             
             const currentConfig = {
                 bgInterval: bgInterval,
-                backgrounds: [bg1, bg2],
+                mobileBackgrounds: [mobileUrl1, mobileUrl2],
+                desktopBackgrounds: [desktopUrl1, desktopUrl2],
                 appButtons: config.appButtons.map((_, idx) => ({
                     label: document.getElementById(`app_label_${idx}`)?.value || '按钮',
                     url: document.getElementById(`app_url_${idx}`)?.value || 'https://',
@@ -1608,7 +1762,7 @@
                     openType: document.getElementById(`app_openType_${idx}`)?.value || 'fullscreen',
                     password: document.getElementById(`app_password_${idx}`)?.value || '',
                     autoRefresh: document.getElementById(`app_autoRefresh_${idx}`)?.value === 'true',
-                    passwordHint: document.getElementById(`app_passwordHint_${idx}`)?.value || '请联系柠檬茶获取密码'
+                    passwordHint: document.getElementById(`app_passwordHint_${idx}`)?.value || '请联系管理员获取密码'
                 })),
                 videoButtons: config.videoButtons.map((_, idx) => {
                     const platform = document.getElementById(`video_platform_${idx}`)?.value || 'google-drive';
@@ -1619,7 +1773,7 @@
                         fileId: platform === 'google-drive' ? inputVal : '',
                         youtubeUrl: platform === 'youtube' ? inputVal : '',
                         password: document.getElementById(`video_password_${idx}`)?.value || '',
-                        passwordHint: document.getElementById(`video_passwordHint_${idx}`)?.value || '请联系柠檬茶获取密码'
+                        passwordHint: document.getElementById(`video_passwordHint_${idx}`)?.value || '请联系管理员获取密码'
                     };
                 })
             };
@@ -1630,12 +1784,10 @@
             window.open(GIST_EDIT_URL, '_blank');
         };
 
-        // ========== 播放视频 ==========
         function performPlayVideo(videoKey) {
             const video = window.videoConfig[videoKey];
             if (!video) return;
             
-            // 关闭全屏
             closeFullscreen();
             
             document.getElementById('videoTitle').textContent = `正在播放：${video.title}`;
