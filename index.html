@@ -214,6 +214,29 @@
             border: none;
         }
         
+        /* 新增：播放器包装器 - 用于遮挡右上角按钮 */
+        .player-wrapper {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        /* 遮挡右上角按钮的遮罩层 */
+        .drive-top-right-mask {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            background: transparent;
+            pointer-events: auto;
+            z-index: 20;
+            cursor: default;
+        }
+        
         .video-title {
             color: white;
             margin: 10px 0 5px;
@@ -2148,6 +2171,7 @@
             window.open(GIST_EDIT_URL, '_blank');
         };
 
+        // ========== 播放视频（只改了这个函数，添加包装器和右上角遮罩） ==========
         function performPlayVideo(videoKey) {
             const video = window.videoConfig[videoKey];
             if (!video) return;
@@ -2158,22 +2182,32 @@
             const playerContainer = document.getElementById('playerContainer');
             playerContainer.innerHTML = '';
             
+            // 创建包装器（用于放置遮罩）
+            const wrapper = document.createElement('div');
+            wrapper.className = 'player-wrapper';
+            
             if (video.platform === 'google-drive') {
                 const iframe = document.createElement('iframe');
                 iframe.className = 'drive-player';
                 iframe.src = `https://drive.google.com/file/d/${video.id}/preview`;
                 iframe.allow = 'autoplay; encrypted-media';
                 iframe.allowFullscreen = true;
-                playerContainer.appendChild(iframe);
+                wrapper.appendChild(iframe);
+                
+                // 添加右上角遮罩 - 遮挡"在新窗口中打开"按钮
+                const topMask = document.createElement('div');
+                topMask.className = 'drive-top-right-mask';
+                wrapper.appendChild(topMask);
             } else {
                 const iframe = document.createElement('iframe');
                 iframe.className = 'youtube-player';
                 iframe.src = `https://www.youtube.com/embed/${video.id}?autoplay=1`;
                 iframe.allow = 'accelerometer; autoplay; encrypted-media';
                 iframe.allowFullscreen = true;
-                playerContainer.appendChild(iframe);
+                wrapper.appendChild(iframe);
             }
             
+            playerContainer.appendChild(wrapper);
             document.getElementById('videoContainer').classList.add('show');
             document.getElementById('videoContainer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
