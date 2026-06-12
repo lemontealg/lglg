@@ -29,19 +29,6 @@
             z-index: -1;
         }
         
-        /* 基础背景样式 */
-        .bg-base {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-        
-        /* 背景图片切换 */
         .bg-image {
             position: absolute;
             top: 0;
@@ -59,27 +46,17 @@
             opacity: 1;
         }
 
-        /* 手机端显示手机背景 */
         @media (max-width: 768px) {
-            .bg-desktop {
-                display: none;
-            }
-            .bg-mobile {
-                display: block;
-            }
+            .bg-desktop { display: none; }
+            .bg-mobile { display: block; }
         }
         
-        /* 电脑端显示电脑背景 */
         @media (min-width: 769px) {
-            .bg-mobile {
-                display: none;
-            }
-            .bg-desktop {
-                display: block;
-            }
+            .bg-mobile { display: none; }
+            .bg-desktop { display: block; }
         }
 
-        /* ========== 前台样式 - 使用CSS变量控制按钮大小和间距 ========== */
+        /* ========== 前台样式 ========== */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -91,28 +68,35 @@
             text-align: center;
         }
 
-        /* 按钮大小CSS变量 */
         :root {
             --button-mobile-size: 70px;
-            --button-desktop-size: 50px;
-            --button-mobile-gap: 30px;
-            --button-desktop-gap: 15px;
+            --button-desktop-size: 70px;
+            --button-mobile-gap: 20px;
+            --button-desktop-gap: 20px;
             --button-mobile-cols: 4;
-            --button-desktop-cols: 10;
-            --button-radius: 12px;
+            --button-desktop-cols: 5;
+            --button-radius: 18px;
             --button-font-size: 12px;
-            --button-padding: 4px;
         }
 
-        /* 左上角登录入口 */
-        .login-entrance {
+        /* 顶部按钮容器 - 左右布局 */
+        .top-bar {
             position: fixed;
             top: 15px;
             left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+        .login-entrance {
+            pointer-events: auto;
             color: rgba(255, 255, 255, 0.8);
             font-size: 14px;
             cursor: pointer;
-            z-index: 100;
             padding: 8px 15px;
             border-radius: 20px;
             background: rgba(0, 0, 0, 0.3);
@@ -126,68 +110,314 @@
             background: rgba(0, 0, 0, 0.5);
         }
 
-        /* ===== 可调节的按钮样式 ===== */
+        /* InBox 铃铛按钮样式 */
+        .inbox-bell {
+            pointer-events: auto;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+        }
+
+        .inbox-bell:hover {
+            color: #FFD447;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .bell-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ff4444;
+            color: white;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            font-weight: bold;
+        }
+
+        /* InBox 抽屉面板 */
+        .inbox-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 380px;
+            height: 100%;
+            background: rgba(20, 20, 30, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid rgba(255, 212, 71, 0.3);
+            box-shadow: -5px 0 25px rgba(0,0,0,0.3);
+        }
+
+        .inbox-drawer.open {
+            transform: translateX(0);
+        }
+
+        .inbox-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 212, 71, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .inbox-header h3 {
+            color: #FFD447;
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .inbox-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .inbox-close:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .inbox-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .inbox-empty {
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            padding: 40px 20px;
+            font-size: 14px;
+        }
+
+        .inbox-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 3px solid #FFD447;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .inbox-item:hover {
+            background: rgba(255,255,255,0.18);
+        }
+
+        .inbox-item.unread {
+            background: rgba(255, 212, 71, 0.15);
+        }
+
+        .inbox-item-title {
+            font-weight: bold;
+            color: #FFD447;
+            font-size: 15px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .unread-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #FFD447;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .inbox-item-date {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 8px;
+        }
+
+        .inbox-item-preview {
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        /* 全文查看弹窗 */
+        .full-message-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .full-message-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .full-message-box {
+            background: rgba(30, 30, 40, 0.98);
+            border-radius: 32px;
+            padding: 28px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 212, 71, 0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .full-message-overlay.active .full-message-box {
+            transform: scale(1);
+        }
+
+        .full-message-title {
+            color: #FFD447;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,212,71,0.3);
+        }
+
+        .full-message-date {
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .full-message-content {
+            color: rgba(255,255,255,0.9);
+            font-size: 15px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin-bottom: 24px;
+        }
+
+        .full-message-close {
+            background: #FFD447;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            color: #1e1e2f;
+        }
+
         .button-grid {
             display: grid;
             margin-bottom: 40px;
             padding: 15px;
         }
         
-        /* 手机端 */
         @media (max-width: 768px) {
             .button-grid {
-                grid-template-columns: repeat(var(--button-mobile-cols), 1fr);
+                grid-template-columns: repeat(var(--button-mobile-cols), minmax(70px, 85px));
                 gap: var(--button-mobile-gap);
+                justify-content: center;
             }
-            
-            .app-button {
-                width: var(--button-mobile-size);
-                height: var(--button-mobile-size);
-                margin: 0 auto;
-            }
+            .app-button { width: var(--button-mobile-size); margin: 0 auto; }
         }
         
-        /* 电脑端 */
         @media (min-width: 769px) {
             .button-grid {
-                grid-template-columns: repeat(var(--button-desktop-cols), 1fr);
+                grid-template-columns: repeat(var(--button-desktop-cols), minmax(70px, 85px));
                 gap: var(--button-desktop-gap);
+                justify-content: center;
             }
-            
-            .app-button {
-                width: var(--button-desktop-size);
-                height: var(--button-desktop-size);
-                margin: 0 auto;
-            }
+            .app-button { width: var(--button-desktop-size); margin: 0 auto; }
         }
         
         .app-button {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: var(--button-radius);
-            color: white;
-            font-size: var(--button-font-size);
-            font-weight: 500;
+            background: transparent;
+            border: none;
             cursor: pointer;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: var(--button-padding);
-            transition: all 0.2s ease;
-            word-break: break-word;
-            line-height: 1.2;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0;
+            transition: transform 0.2s ease;
+            font-family: inherit;
         }
         
-        .app-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        .app-button:hover { transform: translateY(-3px); }
+        .app-button:active { transform: scale(0.95); }
+        
+        .app-icon-container {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border-radius: var(--button-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+        
+        .app-icon-img { width: 60%; height: 60%; object-fit: contain; }
+        .app-icon-emoji { font-size: 36px; line-height: 1; }
+        
+        .app-button-label {
+            font-size: var(--button-font-size);
+            font-weight: 500;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: 80px;
+            word-break: break-word;
+            line-height: 1.3;
         }
 
-        /* 视频播放器 */
         .video-container {
             margin-top: 30px;
             display: none;
@@ -197,10 +427,7 @@
             text-align: center;
         }
         
-        .video-container.show {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
+        .video-container.show { display: block; animation: fadeIn 0.5s ease; }
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -212,29 +439,6 @@
             height: 300px;
             border-radius: 12px;
             border: none;
-        }
-        
-        /* 新增：播放器包装器 - 用于遮挡右上角按钮 */
-        .player-wrapper {
-            position: relative;
-            width: 100%;
-            height: 300px;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #000;
-        }
-        
-        /* 遮挡右上角按钮的遮罩层 */
-        .drive-top-right-mask {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 60px;
-            height: 60px;
-            background: transparent;
-            pointer-events: auto;
-            z-index: 20;
-            cursor: default;
         }
         
         .video-title {
@@ -254,11 +458,10 @@
             font-size: 14px;
             margin-top: 10px;
             cursor: pointer;
-            width: auto;
             display: inline-block;
         }
 
-        /* 密码弹窗 - 通用 */
+        /* 密码弹窗 */
         .password-overlay {
             position: fixed;
             top: 0;
@@ -276,10 +479,7 @@
             transition: all 0.3s ease;
         }
 
-        .password-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .password-overlay.active { opacity: 1; visibility: visible; }
 
         .password-box {
             background: rgba(30, 30, 30, 0.95);
@@ -293,25 +493,10 @@
             text-align: center;
         }
 
-        .password-overlay.active .password-box {
-            transform: scale(1);
-        }
+        .password-overlay.active .password-box { transform: scale(1); }
 
-        .password-box h3 {
-            color: white;
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-weight: 500;
-            font-size: 20px;
-            text-align: center;
-        }
-
-        .password-box .password-subtitle {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
+        .password-box h3 { color: white; margin-bottom: 15px; font-size: 20px; }
+        .password-box .password-subtitle { color: rgba(255, 255, 255, 0.6); font-size: 14px; margin-bottom: 20px; }
         .password-box input {
             width: 100%;
             padding: 15px;
@@ -321,57 +506,23 @@
             color: white;
             font-size: 16px;
             outline: none;
-            box-sizing: border-box;
-            border: 1px solid rgba(255,255,255,0.2);
             margin-bottom: 15px;
             text-align: center;
         }
+        .password-box input:focus { border-color: #FFD447; }
+        
+        .password-actions { display: flex; gap: 12px; justify-content: center; }
+        .password-actions button { padding: 12px 0; border-radius: 40px; width: 100%; }
+        .btn-confirm { background-color: #FFD447; color: #222; }
+        .btn-cancel { background-color: transparent; border: 1px solid rgba(255,255,255,0.5); color: white; }
+        .error-message { color: #FF6B6B; font-size: 13px; margin-top: 8px; }
 
-        .password-box input:focus {
-            border-color: #FFD447;
-        }
-
-        .password-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
-
-        .password-actions button {
-            margin: 0;
-            padding: 12px 0;
-            font-size: 16px;
-            border-radius: 40px;
-            width: 100%;
-        }
-
-        .btn-confirm {
-            background-color: #FFD447;
-            color: #222;
-        }
-
-        .btn-cancel {
-            background-color: transparent;
-            border: 1px solid rgba(255,255,255,0.5);
-            color: white;
-        }
-
-        .error-message {
-            color: #FF6B6B;
-            font-size: 13px;
-            margin-top: 8px;
-            min-height: 20px;
-            text-align: center;
-        }
-
-        /* ========== 后台管理样式 ========== */
+        /* 后台管理样式 */
         .admin-container {
             max-width: 1200px;
             margin: 30px auto;
             background: #ffffff;
             border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
             padding: 30px 35px;
             position: relative;
             z-index: 100;
@@ -380,65 +531,35 @@
 
         .admin-container h1 {
             font-size: 28px;
-            font-weight: 650;
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 10px;
             color: #1a1e2b;
-            letter-spacing: -0.3px;
         }
-
         .admin-container h1 span {
             background: #FFD447;
             padding: 6px 16px;
             border-radius: 40px;
             font-size: 15px;
-            font-weight: 600;
             color: #1e1e2f;
-            box-shadow: 0 2px 6px rgba(255,212,71,0.3);
         }
-
         .admin-container h2 {
             font-size: 20px;
-            font-weight: 600;
             margin: 32px 0 18px;
             border-left: 6px solid #FFD447;
             padding-left: 16px;
             color: #1e293b;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 24px;
-        }
-
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px; }
         .card {
             background: #f8fafd;
             border-radius: 28px;
             padding: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
             border: 1px solid #e9edf2;
-            transition: all 0.2s;
         }
-        .card:hover {
-            border-color: #FFD447;
-            box-shadow: 0 8px 20px rgba(255,212,71,0.12);
-        }
-
-        .card label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #475569;
-            display: block;
-            margin-bottom: 6px;
-            letter-spacing: 0.3px;
-        }
-
+        .card:hover { border-color: #FFD447; }
+        .card label { font-size: 13px; font-weight: 600; color: #475569; display: block; margin-bottom: 6px; }
         .card input, .card select {
             width: 100%;
             padding: 12px 18px;
@@ -447,107 +568,47 @@
             font-size: 15px;
             background: white;
             margin-bottom: 18px;
-            transition: 0.2s;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
         }
-
-        .card input:focus, .card select:focus {
-            border-color: #FFD447;
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(255,212,71,0.15);
-        }
-
-        .card .password-field {
-            position: relative;
-        }
-
-        .card .password-field input {
-            padding-right: 40px;
-        }
-
+        .card .password-field { position: relative; }
+        .card .password-field input { padding-right: 40px; }
         .card .password-toggle {
             position: absolute;
             right: 15px;
             top: 38px;
             cursor: pointer;
             color: #666;
-            font-size: 18px;
         }
 
-        /* 颜色选择器样式 */
-        .color-picker-container {
-            display: flex;
-            gap: 10px;
+        .color-picker-container { display: flex; gap: 10px; align-items: center; margin-bottom: 18px; }
+        .color-picker-container input[type="color"] { width: 60px; height: 45px; border-radius: 12px; cursor: pointer; }
+        
+        .icon-preview {
+            display: inline-flex;
             align-items: center;
-            margin-bottom: 18px;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: #eef2f6;
+            border-radius: 40px;
+            font-size: 12px;
         }
-        
-        .color-picker-container input[type="color"] {
-            width: 60px;
-            height: 45px;
-            padding: 5px;
-            border-radius: 12px;
-            border: 1px solid #dde3e9;
-            cursor: pointer;
-            background: white;
-        }
-        
-        .color-picker-container input[type="color"]::-webkit-color-swatch-wrapper {
-            padding: 0;
-        }
-        
-        .color-picker-container input[type="color"]::-webkit-color-swatch {
-            border: none;
-            border-radius: 8px;
-        }
-        
-        .color-picker-container input[type="text"] {
-            flex: 1;
-            margin-bottom: 0;
-        }
+        .icon-preview img { width: 32px; height: 32px; border-radius: 12px; object-fit: cover; }
 
-        /* 按钮大小和间距设置卡片 */
         .size-settings {
             background: #f8fafd;
             border-radius: 24px;
             padding: 28px;
             margin-bottom: 30px;
-            border: 1px solid #e2e8f0;
         }
-        
-        .size-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
+        .size-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px; }
         .size-item {
             background: white;
             border-radius: 20px;
             padding: 20px;
             border: 1px solid #e9edf2;
         }
-        
-        .size-item label {
-            font-weight: 600;
-            font-size: 14px;
-            color: #334155;
-            display: block;
-            margin-bottom: 10px;
-        }
-        
-        .size-item input[type="range"] {
-            width: 100%;
-            margin-bottom: 5px;
-        }
-        
-        .size-item .size-value {
-            font-size: 14px;
-            color: #FFD447;
-            font-weight: 700;
-            float: right;
-        }
+        .size-item label { font-weight: 600; margin-bottom: 10px; display: block; }
+        .size-item .size-value { color: #FFD447; font-weight: 700; float: right; }
 
         .badge {
             background: #FFD447;
@@ -555,10 +616,8 @@
             padding: 5px 14px;
             border-radius: 40px;
             font-size: 13px;
-            font-weight: 700;
             display: inline-block;
             margin-bottom: 14px;
-            letter-spacing: 0.2px;
         }
 
         .btn-primary {
@@ -568,104 +627,49 @@
             padding: 12px 28px;
             border-radius: 60px;
             font-weight: 600;
-            font-size: 15px;
             cursor: pointer;
-            width: auto;
-            box-shadow: 0 4px 10px rgba(255,212,71,0.3);
-            transition: 0.15s;
         }
-        .btn-primary:hover {
-            background: #ffcd2b;
-            transform: scale(1.02);
-        }
-
         .btn-danger {
             background: #fff2f0;
             border: 1px solid #ffbbb5;
             color: #b34033;
             padding: 8px 18px;
             border-radius: 60px;
-            font-weight: 600;
-            font-size: 13px;
             cursor: pointer;
-            transition: 0.15s;
         }
-        .btn-danger:hover {
-            background: #ffe4e0;
-            border-color: #ff8a7a;
-        }
-
         .btn-success {
             background: #f0f9f0;
             border: 1px solid #bae3b0;
             color: #1f6d1f;
             padding: 12px 32px;
             border-radius: 60px;
-            font-weight: 600;
-            font-size: 16px;
             cursor: pointer;
-            transition: 0.15s;
-        }
-        .btn-success:hover {
-            background: #e0f0dc;
-            border-color: #8bc481;
-        }
-
-        .flex-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 18px;
         }
 
         .publish-bar {
             display: flex;
             gap: 20px;
             align-items: center;
-            flex-wrap: wrap;
             margin-top: 40px;
             padding: 20px 28px;
             background: #f2f5f9;
             border-radius: 50px;
-            border: 1px solid #e2e8f0;
         }
 
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .logout-btn {
             background: #f1f4f9;
             border: 1px solid #cfd9e6;
             padding: 10px 24px;
             border-radius: 40px;
             cursor: pointer;
-            font-weight: 600;
-            color: #334155;
-            transition: 0.15s;
-        }
-        .logout-btn:hover {
-            background: #e2e8f0;
-            border-color: #a0b3cc;
         }
 
-        /* 视频卡片专用样式 */
         .video-card {
             background: #f8fafd;
             border-radius: 28px;
             padding: 22px 25px;
             margin-bottom: 20px;
-            border: 1px solid #e9edf2;
-        }
-        .video-card:hover {
-            border-color: #FFD447;
         }
         .video-grid {
             display: grid;
@@ -673,22 +677,9 @@
             gap: 16px;
             align-items: center;
         }
-        @media (max-width:700px){
-            .video-grid { grid-template-columns: 1fr 2fr; }
-        }
+        @media (max-width:700px){ .video-grid { grid-template-columns: 1fr 2fr; } }
         
-        .video-password-field {
-            grid-column: 1 / -1;
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr 2fr;
-            gap: 16px;
-            align-items: center;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed #dde3e9;
-        }
-        
-        .video-color-field {
+        .video-password-field, .icon-url-field, .video-color-field {
             grid-column: 1 / -1;
             display: grid;
             grid-template-columns: 1fr 2fr 1fr 2fr;
@@ -697,131 +688,49 @@
             margin-top: 10px;
         }
 
-        /* 背景图片专用设置卡片 */
         .bg-settings {
             background: #f8fafd;
             border-radius: 24px;
             padding: 28px;
             margin-bottom: 30px;
-            border: 1px solid #e2e8f0;
         }
-        
-        .bg-settings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 25px;
-        }
-        
+        .bg-settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 25px; }
         .bg-device-section {
             background: white;
             border-radius: 20px;
             padding: 20px;
-            border: 1px solid #e9edf2;
         }
-        
         .bg-device-title {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 15px;
-            padding-bottom: 10px;
             border-bottom: 2px solid #FFD447;
+            padding-bottom: 10px;
         }
-        
-        .bg-device-title span {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1e293b;
-        }
-        
-        .bg-device-icon {
-            font-size: 24px;
-        }
-        
-        .bg-device-item {
-            margin-bottom: 15px;
-        }
-        
-        .bg-device-item label {
-            font-weight: 600;
-            font-size: 14px;
-            color: #334155;
-            display: block;
-            margin-bottom: 8px;
-        }
-        
+        .bg-device-item { margin-bottom: 15px; }
         .bg-device-item input {
             width: 100%;
             padding: 14px 18px;
             border-radius: 40px;
             border: 1px solid #d0d7de;
-            font-size: 14px;
-            transition: all 0.2s;
         }
-        
-        .bg-device-item input:focus {
-            border-color: #FFD447;
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(255,212,71,0.15);
-        }
-        
         .bg-timer-settings {
             background: white;
             border-radius: 20px;
             padding: 20px;
-            border: 1px solid #e9edf2;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             gap: 20px;
-            margin-top: 20px;
         }
-        
-        .timer-item {
-            flex: 1 1 250px;
-        }
-        
-        .timer-item label {
-            font-weight: 600;
-            font-size: 14px;
-            color: #334155;
-            display: block;
-            margin-bottom: 8px;
-        }
-        
-        .timer-item input {
-            width: 100%;
-            padding: 14px 18px;
-            border-radius: 40px;
-            border: 1px solid #d0d7de;
-            font-size: 14px;
-        }
-        
-        .timer-item input:focus {
-            border-color: #FFD447;
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(255,212,71,0.15);
-        }
-        
+        .timer-item { flex: 1 1 250px; }
         .timer-preview {
             background: #FFD44720;
             padding: 8px 20px;
             border-radius: 40px;
-            font-size: 14px;
-            color: #334155;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .timer-value {
-            font-weight: 700;
-            color: #1e1e2f;
-            font-size: 18px;
         }
 
-        /* 登录弹窗 */
         .login-overlay {
             position: fixed;
             top: 0;
@@ -838,12 +747,7 @@
             visibility: hidden;
             transition: all 0.3s ease;
         }
-
-        .login-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
+        .login-overlay.active { opacity: 1; visibility: visible; }
         .login-box {
             background: white;
             border-radius: 32px;
@@ -851,58 +755,16 @@
             width: 340px;
             text-align: center;
         }
-
-        .login-box h2 {
-            color: #1e1e2f;
-            margin-bottom: 30px;
-            border: none;
-            text-align: center;
-            text-shadow: none;
-        }
-
         .login-box input {
             width: 100%;
             padding: 15px;
             margin-bottom: 15px;
-            border: 1px solid #d0d7de;
             border-radius: 40px;
-            font-size: 16px;
+            border: 1px solid #d0d7de;
             text-align: center;
-            background: #f5f5f5;
         }
+        .login-box button { background: #FFD447; color: #1e1e2f; }
 
-        .login-box input:focus {
-            outline: none;
-            border-color: #FFD447;
-            background: white;
-        }
-
-        .login-box button {
-            background: #FFD447;
-            color: #1e1e2f;
-            margin-bottom: 0;
-        }
-
-        .login-box .login-note {
-            margin-top: 15px;
-            font-size: 12px;
-            color: #999;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .loading {
-            color: white;
-            text-align: center;
-            padding: 50px;
-        }
-        .admin-container .loading {
-            color: #1e293b;
-        }
-
-        /* 全屏网页容器 */
         .fullscreen-overlay {
             position: fixed;
             top: 0;
@@ -917,90 +779,26 @@
             display: flex;
             flex-direction: column;
         }
-        
-        .fullscreen-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
+        .fullscreen-overlay.active { opacity: 1; visibility: visible; }
         .fullscreen-header {
             background-color: #FFD447;
             padding: 8px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: #1e1e2f;
-            font-weight: bold;
             height: 40px;
         }
-        
-        .fullscreen-title {
-            font-size: 14px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 70%;
-        }
-        
         .fullscreen-close {
             background: transparent;
             border: none;
-            color: #1e1e2f;
             font-size: 20px;
             width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
-            border-radius: 50%;
-            transition: all 0.2s;
-            padding: 0;
-            margin: 0;
         }
-        
-        .fullscreen-close:hover {
-            background: rgba(0, 0, 0, 0.1);
-        }
-        
-        .fullscreen-frame {
-            width: 100%;
-            flex: 1;
-            border: none;
-            background: white;
-        }
+        .fullscreen-frame { width: 100%; flex: 1; border: none; }
 
-        /* 加载动画 */
-        .fullscreen-loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 40px;
-            z-index: 4100;
-            font-size: 14px;
-            display: none;
-        }
-        
-        .fullscreen-loading.show {
-            display: block;
-        }
-        
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .loading-spinner {
-            display: inline-block;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-        }
-
-        /* 设备类型指示器 */
+        .hidden { display: none; }
+        .loading { color: white; text-align: center; padding: 50px; }
         .device-indicator {
             position: fixed;
             bottom: 15px;
@@ -1011,187 +809,206 @@
             border-radius: 20px;
             font-size: 12px;
             z-index: 1000;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* InBox 后台管理样式 */
+        .inbox-admin-section {
+            background: #f8fafd;
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+        .inbox-add-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .inbox-add-form input,
+        .inbox-add-form textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 40px;
+            border: 1px solid #dde3e9;
+            font-size: 14px;
+        }
+        .inbox-add-form textarea {
+            border-radius: 20px;
+            resize: vertical;
+            min-height: 80px;
+        }
+        .inbox-list-item {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #FFD447;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .inbox-list-content {
+            flex: 1;
+        }
+        .inbox-list-title {
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+        .inbox-list-message {
+            color: #475569;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+        .inbox-list-date {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+        .delete-inbox-btn {
+            background: #fee2e2;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 30px;
+            color: #dc2626;
+            cursor: pointer;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
-    <!-- 背景图片容器 -->
     <div class="background-container">
-        <!-- 手机背景 -->
-        <div class="bg-mobile" id="mobileBgContainer">
+        <div class="bg-mobile">
             <div class="bg-image" id="mobileBg1"></div>
             <div class="bg-image" id="mobileBg2"></div>
         </div>
-        <!-- 电脑背景 -->
-        <div class="bg-desktop" id="desktopBgContainer">
+        <div class="bg-desktop">
             <div class="bg-image" id="desktopBg1"></div>
             <div class="bg-image" id="desktopBg2"></div>
         </div>
     </div>
 
-    <!-- 设备类型指示器 -->
     <div class="device-indicator" id="deviceIndicator">加载中...</div>
-
-    <!-- 左上角登录入口 -->
-    <div class="login-entrance" onclick="showLoginModal()">🔐登录</div>
-
-    <!-- 登录弹窗 -->
-    <div id="loginOverlay" class="login-overlay">
-        <div class="login-box">
-            <h2>管理员登录</h2>
-            <input type="text" id="username" placeholder="账号" value="" autocomplete="off">
-            <input type="password" id="password" placeholder="密码" value="" autocomplete="off" onkeypress="handleLoginKeyPress(event)">
-            <button onclick="handleLogin()">进入后台</button>
-            <p class="login-note" onclick="closeLoginModal()">点击空白处关闭</p>
+    
+    <!-- 顶部按钮容器 - 左右布局 -->
+    <div class="top-bar">
+        <div class="login-entrance" onclick="showLoginModal()">🔐登录</div>
+        <div class="inbox-bell" onclick="toggleInboxDrawer()">
+            🔔
+            <span id="bellBadge" class="bell-badge" style="display: none;">0</span>
         </div>
     </div>
 
-    <!-- 前台界面 -->
+    <!-- InBox 抽屉面板 -->
+    <div id="inboxDrawer" class="inbox-drawer">
+        <div class="inbox-header">
+            <h3>📬 收件箱</h3>
+            <button class="inbox-close" onclick="closeInboxDrawer()">✕</button>
+        </div>
+        <div class="inbox-content" id="inboxContent">
+            <div class="inbox-empty">暂无消息</div>
+        </div>
+    </div>
+
+    <!-- 全文查看弹窗 -->
+    <div id="fullMessageOverlay" class="full-message-overlay">
+        <div class="full-message-box">
+            <div class="full-message-title" id="fullMessageTitle"></div>
+            <div class="full-message-date" id="fullMessageDate"></div>
+            <div class="full-message-content" id="fullMessageContent"></div>
+            <button class="full-message-close" onclick="closeFullMessage()">关闭</button>
+        </div>
+    </div>
+
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-box">
+            <h2>管理员登录</h2>
+            <input type="text" id="username" placeholder="账号" autocomplete="off">
+            <input type="password" id="password" placeholder="密码" autocomplete="off" onkeypress="handleLoginKeyPress(event)">
+            <button onclick="handleLogin()">进入后台</button>
+            <p class="login-note" onclick="closeLoginModal()" style="margin-top:15px; font-size:12px; color:#999;">点击空白处关闭</p>
+        </div>
+    </div>
+
     <div id="frontendContainer" class="container">
         <div id="loadingMessage" class="loading">加载配置中...</div>
         <div id="mainContent" style="display: none;">
             <h2 style="font-size: 18px; margin-bottom: 25px; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">🍋 请选择下载或观看视频</h2>
-            
-            <!-- App下载按钮 -->
             <div class="button-grid" id="appButtons"></div>
-            
-            <!-- 视频按钮 -->
             <div class="button-grid" id="videoButtons"></div>
-            
-            <!-- 视频播放区域 -->
             <div id="videoContainer" class="video-container">
                 <div class="video-title" id="videoTitle">正在播放</div>
                 <div id="playerContainer" style="width:100%; height:300px; border-radius:12px;"></div>
                 <button class="close-video" onclick="closeVideo()">关闭视频</button>
             </div>
-            
-            <p style="font-size: 12px; margin-top: 15px; color: rgba(255,255,255,0.7);"></p>
         </div>
     </div>
 
-    <!-- 后台界面 -->
     <div id="adminContainer" class="admin-container hidden">
         <div class="admin-header">
             <h1>🍋 柠檬茶 · 后台管理 <span>管理员</span></h1>
             <button class="logout-btn" onclick="logout()">退出后台</button>
         </div>
-
         <div id="adminLoading" class="loading" style="color:#1e293b;">加载中...</div>
         <div id="adminContent" style="display: none;">
-            
-            <!-- 背景图片设置卡片 -->
+            <!-- InBox 管理模块 -->
+            <h2>📬 InBox 通知管理</h2>
+            <div class="inbox-admin-section">
+                <div class="inbox-add-form">
+                    <input type="text" id="inboxTitle" placeholder="通知标题" autocomplete="off">
+                    <textarea id="inboxMessage" placeholder="通知内容"></textarea>
+                    <button class="btn-primary" onclick="addInboxMessage()" style="width: auto;">➕ 添加通知</button>
+                </div>
+                <div id="inboxAdminList"></div>
+                <button class="btn-danger" onclick="clearAllInbox()" style="margin-top: 15px;">🗑️ 清空所有通知</button>
+            </div>
+
             <h2>🖼️ 背景图片管理</h2>
             <div class="bg-settings">
                 <div class="bg-settings-grid">
                     <div class="bg-device-section">
-                        <div class="bg-device-title">
-                            <span class="bg-device-icon">📱</span>
-                            <span>手机背景设置</span>
-                        </div>
-                        <div class="bg-device-item">
-                            <label>手机背景图 1</label>
-                            <input type="url" id="mobileBgInput1" placeholder="https://...手机背景图1" value="">
-                        </div>
-                        <div class="bg-device-item">
-                            <label>手机背景图 2</label>
-                            <input type="url" id="mobileBgInput2" placeholder="https://...手机背景图2" value="">
-                        </div>
+                        <div class="bg-device-title"><span>📱</span><span>手机背景设置</span></div>
+                        <div class="bg-device-item"><label>手机背景图 1</label><input type="url" id="mobileBgInput1" placeholder="https://..."></div>
+                        <div class="bg-device-item"><label>手机背景图 2</label><input type="url" id="mobileBgInput2" placeholder="https://..."></div>
                     </div>
-                    
                     <div class="bg-device-section">
-                        <div class="bg-device-title">
-                            <span class="bg-device-icon">💻</span>
-                            <span>电脑背景设置</span>
-                        </div>
-                        <div class="bg-device-item">
-                            <label>电脑背景图 1</label>
-                            <input type="url" id="desktopBgInput1" placeholder="https://...电脑背景图1" value="">
-                        </div>
-                        <div class="bg-device-item">
-                            <label>电脑背景图 2</label>
-                            <input type="url" id="desktopBgInput2" placeholder="https://...电脑背景图2" value="">
-                        </div>
+                        <div class="bg-device-title"><span>💻</span><span>电脑背景设置</span></div>
+                        <div class="bg-device-item"><label>电脑背景图 1</label><input type="url" id="desktopBgInput1" placeholder="https://..."></div>
+                        <div class="bg-device-item"><label>电脑背景图 2</label><input type="url" id="desktopBgInput2" placeholder="https://..."></div>
                     </div>
                 </div>
-                
                 <div class="bg-timer-settings">
-                    <div class="timer-item">
-                        <label>⏱️ 背景切换间隔 (秒)</label>
-                        <input type="number" id="bgInterval" min="1" max="60" value="5" step="1" onchange="updateBackgroundTimePreview()">
-                    </div>
-                    <div class="timer-preview">
-                        <span>当前：</span>
-                        <span class="timer-value" id="bgIntervalDisplay">5</span>
-                        <span>秒</span>
-                    </div>
+                    <div class="timer-item"><label>⏱️ 背景切换间隔 (秒)</label><input type="number" id="bgInterval" min="1" max="60" value="5" onchange="updateBackgroundTimePreview()"></div>
+                    <div class="timer-preview"><span>当前：</span><span class="timer-value" id="bgIntervalDisplay">5</span><span>秒</span></div>
                     <button class="btn-primary" onclick="applyBackgroundSettings()">应用</button>
                 </div>
             </div>
 
-            <!-- 按钮大小和间距设置 - 分开设置 -->
             <h2>🔘 按钮大小和间距设置</h2>
             <div class="size-settings">
-                <h3 style="margin:0 0 15px; font-size:18px; color:#1e293b;">📱 手机端设置</h3>
+                <h3 style="margin:0 0 15px;">📱 手机端设置</h3>
                 <div class="size-grid">
-                    <div class="size-item">
-                        <label>按钮大小 <span class="size-value" id="mobileSizeValue">70px</span></label>
-                        <input type="range" id="mobileSize" min="40" max="120" value="70" step="1" oninput="updateMobileSize(this.value)">
-                        <div style="font-size:12px; color:#666;">40px=小按钮，120px=大按钮</div>
-                    </div>
-                    <div class="size-item">
-                        <label>每行按钮数 <span class="size-value" id="mobileColsValue">4</span></label>
-                        <input type="range" id="mobileCols" min="2" max="6" value="4" step="1" oninput="updateMobileCols(this.value)">
-                        <div style="font-size:12px; color:#666;">2=大图标，6=小图标</div>
-                    </div>
-                    <div class="size-item">
-                        <label>按钮间距 <span class="size-value" id="mobileGapValue">30px</span></label>
-                        <input type="range" id="mobileGap" min="5" max="50" value="30" step="1" oninput="updateMobileGap(this.value)">
-                        <div style="font-size:12px; color:#666;">数值越大按钮越分开</div>
-                    </div>
+                    <div class="size-item"><label>按钮大小 <span class="size-value" id="mobileSizeValue">70px</span></label><input type="range" id="mobileSize" min="50" max="100" value="70" oninput="updateMobileSize(this.value)"></div>
+                    <div class="size-item"><label>每行按钮数 <span class="size-value" id="mobileColsValue">4</span></label><input type="range" id="mobileCols" min="3" max="6" value="4" oninput="updateMobileCols(this.value)"></div>
+                    <div class="size-item"><label>按钮间距 <span class="size-value" id="mobileGapValue">20px</span></label><input type="range" id="mobileGap" min="10" max="45" value="20" oninput="updateMobileGap(this.value)"></div>
                 </div>
-                
-                <h3 style="margin:30px 0 15px; font-size:18px; color:#1e293b;">💻 电脑端设置</h3>
+                <h3 style="margin:30px 0 15px;">💻 电脑端设置</h3>
                 <div class="size-grid">
-                    <div class="size-item">
-                        <label>按钮大小 <span class="size-value" id="desktopSizeValue">50px</span></label>
-                        <input type="range" id="desktopSize" min="30" max="100" value="50" step="1" oninput="updateDesktopSize(this.value)">
-                        <div style="font-size:12px; color:#666;">30px=小按钮，100px=大按钮</div>
-                    </div>
-                    <div class="size-item">
-                        <label>每行按钮数 <span class="size-value" id="desktopColsValue">10</span></label>
-                        <input type="range" id="desktopCols" min="6" max="15" value="10" step="1" oninput="updateDesktopCols(this.value)">
-                        <div style="font-size:12px; color:#666;">6=大图标，15=小图标</div>
-                    </div>
-                    <div class="size-item">
-                        <label>按钮间距 <span class="size-value" id="desktopGapValue">15px</span></label>
-                        <input type="range" id="desktopGap" min="5" max="40" value="15" step="1" oninput="updateDesktopGap(this.value)">
-                        <div style="font-size:12px; color:#666;">数值越大按钮越分开</div>
-                    </div>
+                    <div class="size-item"><label>按钮大小 <span class="size-value" id="desktopSizeValue">70px</span></label><input type="range" id="desktopSize" min="50" max="100" value="70" oninput="updateDesktopSize(this.value)"></div>
+                    <div class="size-item"><label>每行按钮数 <span class="size-value" id="desktopColsValue">5</span></label><input type="range" id="desktopCols" min="4" max="8" value="5" oninput="updateDesktopCols(this.value)"></div>
+                    <div class="size-item"><label>按钮间距 <span class="size-value" id="desktopGapValue">20px</span></label><input type="range" id="desktopGap" min="10" max="45" value="20" oninput="updateDesktopGap(this.value)"></div>
                 </div>
-                
-                <h3 style="margin:30px 0 15px; font-size:18px; color:#1e293b;">🎨 通用样式</h3>
+                <h3 style="margin:30px 0 15px;">🎨 通用样式</h3>
                 <div class="size-grid">
-                    <div class="size-item">
-                        <label>圆角大小 <span class="size-value" id="radiusValue">12px</span></label>
-                        <input type="range" id="buttonRadius" min="0" max="30" value="12" step="1" oninput="updateButtonRadius(this.value)">
-                        <div style="font-size:12px; color:#666;">0=方形，30=很圆</div>
-                    </div>
-                    <div class="size-item">
-                        <label>文字大小 <span class="size-value" id="fontSizeValue">12px</span></label>
-                        <input type="range" id="buttonFontSize" min="8" max="24" value="12" step="1" oninput="updateButtonFontSize(this.value)">
-                        <div style="font-size:12px; color:#666;">按钮文字大小</div>
-                    </div>
+                    <div class="size-item"><label>圆角大小 <span class="size-value" id="radiusValue">18px</span></label><input type="range" id="buttonRadius" min="8" max="35" value="18" oninput="updateButtonRadius(this.value)"></div>
+                    <div class="size-item"><label>文字大小 <span class="size-value" id="fontSizeValue">12px</span></label><input type="range" id="buttonFontSize" min="9" max="18" value="12" oninput="updateButtonFontSize(this.value)"></div>
                 </div>
-                
                 <div style="display: flex; gap: 10px; justify-content: center; margin-top:30px;">
                     <button class="btn-primary" onclick="saveButtonSettings()">保存设置</button>
                     <button class="btn-success" onclick="resetButtonSettings()">重置默认</button>
                 </div>
             </div>
 
-            <h2>📲 App 下载按钮</h2>
+            <h2>📲 App 下载按钮 <span style="font-size:12px;">(支持图片URL)</span></h2>
             <div id="appButtonsAdmin" class="card-grid"></div>
             <button class="btn-primary" onclick="addAppButton()" style="margin-top:20px;">➕ 新增下载按钮</button>
 
@@ -1206,7 +1023,6 @@
         </div>
     </div>
 
-    <!-- APP密码弹窗 -->
     <div id="appPasswordOverlay" class="password-overlay">
         <div class="password-box">
             <h3 id="appPasswordTitle">🔐 请输入密码</h3>
@@ -1220,7 +1036,6 @@
         </div>
     </div>
 
-    <!-- 视频密码弹窗 -->
     <div id="videoPasswordOverlay" class="password-overlay">
         <div class="password-box">
             <h3 id="videoPasswordTitle">🔐 请输入视频密码</h3>
@@ -1234,14 +1049,10 @@
         </div>
     </div>
 
-    <!-- 全屏网页容器 -->
     <div id="fullscreenOverlay" class="fullscreen-overlay">
         <div class="fullscreen-header">
             <span class="fullscreen-title" id="fullscreenTitle">加载中...</span>
             <button class="fullscreen-close" onclick="closeFullscreen()">✕</button>
-        </div>
-        <div class="fullscreen-loading" id="fullscreenLoading">
-            <span class="loading-spinner">🔄</span> 刷新内容中...
         </div>
         <iframe id="fullscreenFrame" class="fullscreen-frame" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads allow-top-navigation"></iframe>
     </div>
@@ -1250,872 +1061,541 @@
         // ========== 配置 ==========
         const GIST_URL = 'https://gist.githubusercontent.com/lemontealg/3395ef986782377142871b8747a822f4/raw/config.json';
         const GIST_EDIT_URL = 'https://gist.github.com/lemontealg/3395ef986782377142871b8747a822f4/edit';
-
-        const ADMIN_CREDENTIALS = {
-            username: 'lg',
-            password: '128128'
-        };
-
-        // 预定义颜色数组 - 自动生成不同颜色
-        const COLOR_PALETTE = [
-            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
-            '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
-            '#F1948A', '#82E0AA', '#F5B041', '#A569BD', '#5DADE2',
-            '#EC7063', '#58D68D', '#F4D03F', '#AF7AC5', '#5499C7',
-            '#E67E22', '#2ECC71', '#F1C40F', '#9B59B6', '#3498DB',
-            '#E74C3C', '#1ABC9C', '#F39C12', '#8E44AD', '#2980B9'
-        ];
+        const ADMIN_CREDENTIALS = { username: 'lg', password: '128128' };
+        const COLOR_PALETTE = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'];
 
         let config = null;
         let isAdmin = sessionStorage.getItem('lemontea_admin') === 'true';
         let bgTimer = null;
-
-        // 按钮相关
         let pendingAppButton = null;
         let pendingVideoButton = null;
         let pendingVideoKey = null;
+        
+        // InBox 相关变量
+        let readMessageIds = new Set();
 
-        // ========== 按钮样式控制 ==========
-        function updateMobileSize(value) {
-            const root = document.documentElement;
-            const valuePx = value + 'px';
-            root.style.setProperty('--button-mobile-size', valuePx);
-            document.getElementById('mobileSizeValue').textContent = valuePx;
-        }
+        function getRandomColor() { return COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)]; }
 
-        function updateMobileCols(value) {
-            const root = document.documentElement;
-            root.style.setProperty('--button-mobile-cols', value);
-            document.getElementById('mobileColsValue').textContent = value;
-        }
-
-        function updateMobileGap(value) {
-            const root = document.documentElement;
-            const valuePx = value + 'px';
-            root.style.setProperty('--button-mobile-gap', valuePx);
-            document.getElementById('mobileGapValue').textContent = valuePx;
-        }
-
-        function updateDesktopSize(value) {
-            const root = document.documentElement;
-            const valuePx = value + 'px';
-            root.style.setProperty('--button-desktop-size', valuePx);
-            document.getElementById('desktopSizeValue').textContent = valuePx;
-        }
-
-        function updateDesktopCols(value) {
-            const root = document.documentElement;
-            root.style.setProperty('--button-desktop-cols', value);
-            document.getElementById('desktopColsValue').textContent = value;
-        }
-
-        function updateDesktopGap(value) {
-            const root = document.documentElement;
-            const valuePx = value + 'px';
-            root.style.setProperty('--button-desktop-gap', valuePx);
-            document.getElementById('desktopGapValue').textContent = valuePx;
-        }
-
-        function updateButtonRadius(value) {
-            const root = document.documentElement;
-            const valuePx = value + 'px';
-            root.style.setProperty('--button-radius', valuePx);
-            document.getElementById('radiusValue').textContent = valuePx;
-        }
-
-        function updateButtonFontSize(value) {
-            const root = document.documentElement;
-            const valuePx = value + 'px';
-            root.style.setProperty('--button-font-size', valuePx);
-            document.getElementById('fontSizeValue').textContent = valuePx;
-        }
+        function updateMobileSize(v) { document.documentElement.style.setProperty('--button-mobile-size', v+'px'); document.getElementById('mobileSizeValue').textContent = v+'px'; }
+        function updateMobileCols(v) { document.documentElement.style.setProperty('--button-mobile-cols', v); document.getElementById('mobileColsValue').textContent = v; }
+        function updateMobileGap(v) { document.documentElement.style.setProperty('--button-mobile-gap', v+'px'); document.getElementById('mobileGapValue').textContent = v+'px'; }
+        function updateDesktopSize(v) { document.documentElement.style.setProperty('--button-desktop-size', v+'px'); document.getElementById('desktopSizeValue').textContent = v+'px'; }
+        function updateDesktopCols(v) { document.documentElement.style.setProperty('--button-desktop-cols', v); document.getElementById('desktopColsValue').textContent = v; }
+        function updateDesktopGap(v) { document.documentElement.style.setProperty('--button-desktop-gap', v+'px'); document.getElementById('desktopGapValue').textContent = v+'px'; }
+        function updateButtonRadius(v) { document.documentElement.style.setProperty('--button-radius', v+'px'); document.getElementById('radiusValue').textContent = v+'px'; }
+        function updateButtonFontSize(v) { document.documentElement.style.setProperty('--button-font-size', v+'px'); document.getElementById('fontSizeValue').textContent = v+'px'; }
 
         function saveButtonSettings() {
             if (!config) config = {};
-            
             config.buttonSettings = {
-                mobileSize: document.getElementById('mobileSize').value,
-                mobileCols: document.getElementById('mobileCols').value,
-                mobileGap: document.getElementById('mobileGap').value,
-                desktopSize: document.getElementById('desktopSize').value,
-                desktopCols: document.getElementById('desktopCols').value,
-                desktopGap: document.getElementById('desktopGap').value,
-                radius: document.getElementById('buttonRadius').value,
-                fontSize: document.getElementById('buttonFontSize').value
+                mobileSize: document.getElementById('mobileSize').value, mobileCols: document.getElementById('mobileCols').value,
+                mobileGap: document.getElementById('mobileGap').value, desktopSize: document.getElementById('desktopSize').value,
+                desktopCols: document.getElementById('desktopCols').value, desktopGap: document.getElementById('desktopGap').value,
+                radius: document.getElementById('buttonRadius').value, fontSize: document.getElementById('buttonFontSize').value
             };
-            
             alert('按钮设置已保存！');
         }
 
         function resetButtonSettings() {
-            document.getElementById('mobileSize').value = 70;
-            document.getElementById('mobileCols').value = 4;
-            document.getElementById('mobileGap').value = 30;
-            document.getElementById('desktopSize').value = 50;
-            document.getElementById('desktopCols').value = 10;
-            document.getElementById('desktopGap').value = 15;
-            document.getElementById('buttonRadius').value = 12;
-            document.getElementById('buttonFontSize').value = 12;
-            
-            updateMobileSize(70);
-            updateMobileCols(4);
-            updateMobileGap(30);
-            updateDesktopSize(50);
-            updateDesktopCols(10);
-            updateDesktopGap(15);
-            updateButtonRadius(12);
-            updateButtonFontSize(12);
+            document.getElementById('mobileSize').value = 70; document.getElementById('mobileCols').value = 4; document.getElementById('mobileGap').value = 20;
+            document.getElementById('desktopSize').value = 70; document.getElementById('desktopCols').value = 5; document.getElementById('desktopGap').value = 20;
+            document.getElementById('buttonRadius').value = 18; document.getElementById('buttonFontSize').value = 12;
+            updateMobileSize(70); updateMobileCols(4); updateMobileGap(20);
+            updateDesktopSize(70); updateDesktopCols(5); updateDesktopGap(20);
+            updateButtonRadius(18); updateButtonFontSize(12);
         }
 
         function loadButtonSettings() {
-            if (config && config.buttonSettings) {
+            if (config?.buttonSettings) {
                 const bs = config.buttonSettings;
-                
-                document.getElementById('mobileSize').value = bs.mobileSize || 70;
-                document.getElementById('mobileCols').value = bs.mobileCols || 4;
-                document.getElementById('mobileGap').value = bs.mobileGap || 30;
-                document.getElementById('desktopSize').value = bs.desktopSize || 50;
-                document.getElementById('desktopCols').value = bs.desktopCols || 10;
-                document.getElementById('desktopGap').value = bs.desktopGap || 15;
-                document.getElementById('buttonRadius').value = bs.radius || 12;
-                document.getElementById('buttonFontSize').value = bs.fontSize || 12;
-                
-                updateMobileSize(bs.mobileSize || 70);
-                updateMobileCols(bs.mobileCols || 4);
-                updateMobileGap(bs.mobileGap || 30);
-                updateDesktopSize(bs.desktopSize || 50);
-                updateDesktopCols(bs.desktopCols || 10);
-                updateDesktopGap(bs.desktopGap || 15);
-                updateButtonRadius(bs.radius || 12);
-                updateButtonFontSize(bs.fontSize || 12);
-            } else {
-                resetButtonSettings();
-            }
+                document.getElementById('mobileSize').value = bs.mobileSize || 70; document.getElementById('mobileCols').value = bs.mobileCols || 4;
+                document.getElementById('mobileGap').value = bs.mobileGap || 20; document.getElementById('desktopSize').value = bs.desktopSize || 70;
+                document.getElementById('desktopCols').value = bs.desktopCols || 5; document.getElementById('desktopGap').value = bs.desktopGap || 20;
+                document.getElementById('buttonRadius').value = bs.radius || 18; document.getElementById('buttonFontSize').value = bs.fontSize || 12;
+                updateMobileSize(bs.mobileSize || 70); updateMobileCols(bs.mobileCols || 4); updateMobileGap(bs.mobileGap || 20);
+                updateDesktopSize(bs.desktopSize || 70); updateDesktopCols(bs.desktopCols || 5); updateDesktopGap(bs.desktopGap || 20);
+                updateButtonRadius(bs.radius || 18); updateButtonFontSize(bs.fontSize || 12);
+            } else resetButtonSettings();
         }
 
-        // ========== 获取随机颜色 ==========
-        function getRandomColor() {
-            return COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)];
-        }
-
-        // ========== 检测设备类型并更新显示 ==========
         function detectDevice() {
             const width = window.innerWidth;
-            const deviceType = width <= 768 ? 'mobile' : 'desktop';
-            
-            // 更新设备指示器
-            const indicator = document.getElementById('deviceIndicator');
-            if (indicator) {
-                const root = document.documentElement;
-                const size = deviceType === 'mobile' ? 
-                    getComputedStyle(root).getPropertyValue('--button-mobile-size').trim() : 
-                    getComputedStyle(root).getPropertyValue('--button-desktop-size').trim();
-                const cols = deviceType === 'mobile' ? 
-                    getComputedStyle(root).getPropertyValue('--button-mobile-cols').trim() : 
-                    getComputedStyle(root).getPropertyValue('--button-desktop-cols').trim();
-                const gap = deviceType === 'mobile' ? 
-                    getComputedStyle(root).getPropertyValue('--button-mobile-gap').trim() : 
-                    getComputedStyle(root).getPropertyValue('--button-desktop-gap').trim();
-                indicator.innerHTML = `📱 ${deviceType} `;
-            }
-            
-            return deviceType;
+            const type = width <= 768 ? 'mobile' : 'desktop';
+            document.getElementById('deviceIndicator').innerHTML = `📱 ${type === 'mobile' ? '手机模式' : '电脑模式'}`;
+            return type;
         }
 
-        // ========== 设置背景图片 ==========
-        function setBackgroundImage(element, url) {
-            if (!element) return false;
-            
-            if (url && url.trim() !== '') {
-                element.style.backgroundImage = `url('${url}')`;
-                return true;
-            } else {
-                element.style.backgroundImage = "url('https://images.unsplash.com/photo-1557683316-973673baf926?w=400')";
-                return false;
-            }
-        }
+        function setBackgroundImage(el, url) { if(el) el.style.backgroundImage = url ? `url('${url}')` : "url('https://images.unsplash.com/photo-1557683316-973673baf926?w=400')"; }
 
-        // ========== 根据设备类型更新背景 ==========
         function updateBackgroundByDevice() {
-            const deviceType = detectDevice();
-            
+            const device = detectDevice();
             let bg1, bg2;
-            if (deviceType === 'mobile') {
-                bg1 = document.getElementById('mobileBg1');
-                bg2 = document.getElementById('mobileBg2');
-                
-                document.querySelector('.bg-mobile').style.display = 'block';
-                document.querySelector('.bg-desktop').style.display = 'none';
+            if (device === 'mobile') {
+                bg1 = document.getElementById('mobileBg1'); bg2 = document.getElementById('mobileBg2');
+                document.querySelector('.bg-mobile').style.display = 'block'; document.querySelector('.bg-desktop').style.display = 'none';
             } else {
-                bg1 = document.getElementById('desktopBg1');
-                bg2 = document.getElementById('desktopBg2');
-                
-                document.querySelector('.bg-mobile').style.display = 'none';
-                document.querySelector('.bg-desktop').style.display = 'block';
+                bg1 = document.getElementById('desktopBg1'); bg2 = document.getElementById('desktopBg2');
+                document.querySelector('.bg-mobile').style.display = 'none'; document.querySelector('.bg-desktop').style.display = 'block';
             }
-            
-            if (config) {
-                const backgrounds = deviceType === 'mobile' ? config.mobileBackgrounds : config.desktopBackgrounds;
-                if (backgrounds && backgrounds.length >= 2) {
-                    setBackgroundImage(bg1, backgrounds[0]);
-                    setBackgroundImage(bg2, backgrounds[1]);
-                } else {
-                    setBackgroundImage(bg1, 'https://images.unsplash.com/photo-1557683316-973673baf926?w=400');
-                    setBackgroundImage(bg2, 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=400');
-                }
-            }
-            
-            bg1.classList.add('active');
-            bg2.classList.remove('active');
+            const bgs = device === 'mobile' ? config?.mobileBackgrounds : config?.desktopBackgrounds;
+            setBackgroundImage(bg1, bgs?.[0]); setBackgroundImage(bg2, bgs?.[1]);
+            bg1.classList.add('active'); bg2.classList.remove('active');
         }
 
-        window.addEventListener('resize', function() {
-            updateBackgroundByDevice();
-            detectDevice();
-        });
-
-        // ========== 带自动刷新的全屏打开 ==========
-        window.openFullscreenWithRefresh = function(url, title, needRefresh) {
-            closeVideo();
-            
-            const fullscreenOverlay = document.getElementById('fullscreenOverlay');
-            const fullscreenFrame = document.getElementById('fullscreenFrame');
-            const fullscreenTitle = document.getElementById('fullscreenTitle');
-            const fullscreenLoading = document.getElementById('fullscreenLoading');
-            
-            fullscreenTitle.textContent = title || '加载中...';
-            
-            fullscreenOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
-            if (needRefresh) {
-                fullscreenLoading.classList.add('show');
-                
-                const refreshParam = `&_refresh=${Date.now()}`;
-                const refreshUrl = url.includes('?') ? url + refreshParam : url + '?' + refreshParam.substring(1);
-                
-                fullscreenFrame.src = refreshUrl;
-                
-                fullscreenFrame.onload = function() {
-                    setTimeout(() => {
-                        fullscreenLoading.classList.remove('show');
-                    }, 300);
-                };
-            } else {
-                fullscreenFrame.src = url;
-            }
-        };
-
-        // ========== 处理APP按钮点击 ==========
-        window.handleAppButtonClick = async function(btn) {
-            if (btn.password && btn.password.trim() !== '') {
-                pendingAppButton = btn;
-                showAppPasswordModal(btn);
-                return;
-            }
-            
-            executeAppButtonOpen(btn);
-        };
-
-        function executeAppButtonOpen(btn) {
-            closeVideo();
-            
-            if (btn.openType === 'fullscreen') {
-                openFullscreenWithRefresh(btn.url, btn.label || '下载', btn.autoRefresh);
-            } else {
-                if (btn.autoRefresh) {
-                    const refreshParam = `&_t=${Date.now()}`;
-                    const refreshUrl = btn.url.includes('?') ? btn.url + refreshParam : btn.url + '?' + refreshParam.substring(1);
-                    window.open(refreshUrl, '_blank');
-                } else {
-                    window.open(btn.url, '_blank');
-                }
-            }
-        }
-
-        // ========== APP密码控制 ==========
-        window.showAppPasswordModal = function(button) {
-            pendingAppButton = button;
-            document.getElementById('appPasswordTitle').textContent = `🔐 请输入 ${button.label} 的密码`;
-            document.getElementById('appPasswordSubtitle').textContent = button.passwordHint || '请联系管理员获取密码';
-            document.getElementById('appPasswordInput').value = '';
-            document.getElementById('appPasswordError').textContent = '';
-            document.getElementById('appPasswordOverlay').classList.add('active');
-            setTimeout(() => document.getElementById('appPasswordInput').focus(), 100);
-        };
-
-        window.closeAppPasswordModal = function() {
-            document.getElementById('appPasswordOverlay').classList.remove('active');
-            pendingAppButton = null;
-        };
-
-        window.confirmAppPassword = function() {
-            if (!pendingAppButton) {
-                closeAppPasswordModal();
-                return;
-            }
-            
-            const entered = document.getElementById('appPasswordInput').value.trim();
-            if (entered !== pendingAppButton.password) {
-                document.getElementById('appPasswordError').textContent = '密码错误';
-                document.getElementById('appPasswordInput').value = '';
-                document.getElementById('appPasswordInput').focus();
-                return;
-            }
-            
-            executeAppButtonOpen(pendingAppButton);
-            closeAppPasswordModal();
-        };
-
-        window.handleAppPasswordKeyPress = function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                confirmAppPassword();
-            }
-        };
-
-        document.getElementById('appPasswordOverlay').addEventListener('click', function(e) {
-            if (e.target === document.getElementById('appPasswordOverlay')) {
-                closeAppPasswordModal();
-            }
-        });
-
-        // ========== 处理视频按钮点击 ==========
-        window.requestVideoPasswordAndPlay = function(videoKey, video) {
-            if (video.password && video.password.trim() !== '') {
-                pendingVideoButton = video;
-                pendingVideoKey = videoKey;
-                showVideoPasswordModal(video);
-                return;
-            }
-            
-            performPlayVideo(videoKey);
-        };
-
-        // ========== 视频密码控制 ==========
-        window.showVideoPasswordModal = function(video) {
-            document.getElementById('videoPasswordTitle').textContent = `🔐 请输入 ${video.title} 的密码`;
-            document.getElementById('videoPasswordSubtitle').textContent = video.passwordHint || '请联系管理员获取密码';
-            document.getElementById('videoPasswordInput').value = '';
-            document.getElementById('videoPasswordError').textContent = '';
-            document.getElementById('videoPasswordOverlay').classList.add('active');
-            setTimeout(() => document.getElementById('videoPasswordInput').focus(), 100);
-        };
-
-        window.closeVideoPasswordModal = function() {
-            document.getElementById('videoPasswordOverlay').classList.remove('active');
-            pendingVideoButton = null;
-            pendingVideoKey = null;
-        };
-
-        window.confirmVideoPassword = function() {
-            if (!pendingVideoButton) {
-                closeVideoPasswordModal();
-                return;
-            }
-            
-            const entered = document.getElementById('videoPasswordInput').value.trim();
-            if (entered !== pendingVideoButton.password) {
-                document.getElementById('videoPasswordError').textContent = '密码错误';
-                document.getElementById('videoPasswordInput').value = '';
-                document.getElementById('videoPasswordInput').focus();
-                return;
-            }
-            
-            if (pendingVideoKey) {
-                performPlayVideo(pendingVideoKey);
-            }
-            closeVideoPasswordModal();
-        };
-
-        window.handleVideoPasswordKeyPress = function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                confirmVideoPassword();
-            }
-        };
-
-        document.getElementById('videoPasswordOverlay').addEventListener('click', function(e) {
-            if (e.target === document.getElementById('videoPasswordOverlay')) {
-                closeVideoPasswordModal();
-            }
-        });
-
-        // 停止背景切换定时器
-        function stopBackgroundTimer() {
-            if (bgTimer) {
-                clearInterval(bgTimer);
-                bgTimer = null;
-            }
-        }
-
-        // 启动背景切换定时器
+        function stopBackgroundTimer() { if (bgTimer) { clearInterval(bgTimer); bgTimer = null; } }
         function startBackgroundTimer() {
             stopBackgroundTimer();
-            
-            const bgInterval = config?.bgInterval || 5;
-            if (bgInterval < 1) return;
-            
-            let currentBg = 1;
-            
+            const interval = config?.bgInterval || 5;
+            if (interval < 1) return;
+            let current = 1;
             bgTimer = setInterval(() => {
-                const deviceType = detectDevice();
-                
-                let bg1, bg2;
-                if (deviceType === 'mobile') {
-                    bg1 = document.getElementById('mobileBg1');
-                    bg2 = document.getElementById('mobileBg2');
-                } else {
-                    bg1 = document.getElementById('desktopBg1');
-                    bg2 = document.getElementById('desktopBg2');
-                }
-                
-                if (currentBg === 1) {
-                    bg1.classList.remove('active');
-                    bg2.classList.add('active');
-                    currentBg = 2;
-                } else {
-                    bg2.classList.remove('active');
-                    bg1.classList.add('active');
-                    currentBg = 1;
-                }
-            }, bgInterval * 1000);
+                const device = detectDevice();
+                let bg1 = device === 'mobile' ? document.getElementById('mobileBg1') : document.getElementById('desktopBg1');
+                let bg2 = device === 'mobile' ? document.getElementById('mobileBg2') : document.getElementById('desktopBg2');
+                if (current === 1) { bg1.classList.remove('active'); bg2.classList.add('active'); current = 2; }
+                else { bg2.classList.remove('active'); bg1.classList.add('active'); current = 1; }
+            }, interval * 1000);
         }
 
-        // 应用背景图片和时间设置
         function applyBackgroundSettings() {
-            const mobileUrl1 = document.getElementById('mobileBgInput1').value.trim();
-            const mobileUrl2 = document.getElementById('mobileBgInput2').value.trim();
-            const desktopUrl1 = document.getElementById('desktopBgInput1').value.trim();
-            const desktopUrl2 = document.getElementById('desktopBgInput2').value.trim();
-            const bgInterval = parseInt(document.getElementById('bgInterval').value) || 5;
-            
             if (!config) config = {};
-            
-            config.mobileBackgrounds = [mobileUrl1, mobileUrl2];
-            config.desktopBackgrounds = [desktopUrl1, desktopUrl2];
-            config.bgInterval = bgInterval;
-            
-            updateBackgroundByDevice();
-            startBackgroundTimer();
-            
+            config.mobileBackgrounds = [document.getElementById('mobileBgInput1').value.trim(), document.getElementById('mobileBgInput2').value.trim()];
+            config.desktopBackgrounds = [document.getElementById('desktopBgInput1').value.trim(), document.getElementById('desktopBgInput2').value.trim()];
+            config.bgInterval = parseInt(document.getElementById('bgInterval').value) || 5;
+            updateBackgroundByDevice(); startBackgroundTimer();
             alert('背景设置已应用！');
         }
 
-        function updateBackgroundTimePreview() {
-            const bgInterval = document.getElementById('bgInterval').value;
-            document.getElementById('bgIntervalDisplay').textContent = bgInterval;
+        function updateBackgroundTimePreview() { document.getElementById('bgIntervalDisplay').textContent = document.getElementById('bgInterval').value; }
+
+        function openFullscreenWithRefresh(url, title, needRefresh) {
+            closeVideo();
+            const overlay = document.getElementById('fullscreenOverlay');
+            document.getElementById('fullscreenTitle').textContent = title || '加载中...';
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            let finalUrl = url;
+            if (needRefresh) finalUrl = url + (url.includes('?') ? '&_t=' : '?_t=') + Date.now();
+            document.getElementById('fullscreenFrame').src = finalUrl;
         }
 
-        function updateBackgroundFromConfig() {
-            if (config) {
-                if (config.mobileBackgrounds) {
-                    document.getElementById('mobileBgInput1').value = config.mobileBackgrounds[0] || '';
-                    document.getElementById('mobileBgInput2').value = config.mobileBackgrounds[1] || '';
-                }
-                if (config.desktopBackgrounds) {
-                    document.getElementById('desktopBgInput1').value = config.desktopBackgrounds[0] || '';
-                    document.getElementById('desktopBgInput2').value = config.desktopBackgrounds[1] || '';
-                }
-                if (config.bgInterval) {
-                    document.getElementById('bgInterval').value = config.bgInterval;
-                    document.getElementById('bgIntervalDisplay').textContent = config.bgInterval;
-                }
+        function executeAppButtonOpen(btn) {
+            closeVideo();
+            if (btn.openType === 'fullscreen') openFullscreenWithRefresh(btn.url, btn.label, btn.autoRefresh);
+            else window.open(btn.autoRefresh ? btn.url + (btn.url.includes('?')?'&_t=':'?_t=')+Date.now() : btn.url, '_blank');
+        }
+
+        window.handleAppButtonClick = function(btn) {
+            if (btn.password?.trim()) { pendingAppButton = btn; showAppPasswordModal(btn); return; }
+            executeAppButtonOpen(btn);
+        };
+
+        window.showAppPasswordModal = function(btn) {
+            document.getElementById('appPasswordTitle').textContent = `🔐 请输入 ${btn.label} 的密码`;
+            document.getElementById('appPasswordSubtitle').textContent = btn.passwordHint || '请联系管理员';
+            document.getElementById('appPasswordInput').value = '';
+            document.getElementById('appPasswordError').textContent = '';
+            document.getElementById('appPasswordOverlay').classList.add('active');
+        };
+        window.closeAppPasswordModal = function() { document.getElementById('appPasswordOverlay').classList.remove('active'); pendingAppButton = null; };
+        window.confirmAppPassword = function() {
+            if (!pendingAppButton) { closeAppPasswordModal(); return; }
+            if (document.getElementById('appPasswordInput').value.trim() !== pendingAppButton.password) {
+                document.getElementById('appPasswordError').textContent = '密码错误';
+                document.getElementById('appPasswordInput').value = '';
+                return;
             }
-            
-            updateBackgroundByDevice();
-            startBackgroundTimer();
+            executeAppButtonOpen(pendingAppButton);
+            closeAppPasswordModal();
+        };
+        window.handleAppPasswordKeyPress = function(e) { if (e.key === 'Enter') confirmAppPassword(); };
+
+        function performPlayVideo(videoKey) {
+            const video = window.videoConfig[videoKey];
+            if (!video) return;
+            closeFullscreen();
+            document.getElementById('videoTitle').textContent = `正在播放：${video.title}`;
+            const container = document.getElementById('playerContainer');
+            container.innerHTML = '';
+            const iframe = document.createElement('iframe');
+            iframe.className = video.platform === 'google-drive' ? 'drive-player' : 'youtube-player';
+            iframe.src = video.platform === 'google-drive' ? `https://drive.google.com/file/d/${video.id}/preview` : `https://www.youtube.com/embed/${video.id}?autoplay=1`;
+            iframe.allow = 'autoplay; encrypted-media'; iframe.allowFullscreen = true;
+            container.appendChild(iframe);
+            document.getElementById('videoContainer').classList.add('show');
         }
 
-        window.onload = async function() {
-            await loadConfig();
-            updateBackgroundFromConfig();
-            loadButtonSettings();
-            
-            detectDevice();
-            
-            if (isAdmin) {
-                document.getElementById('frontendContainer').classList.add('hidden');
-                document.getElementById('adminContainer').classList.remove('hidden');
-                renderAdmin();
+        window.requestVideoPasswordAndPlay = function(videoKey, video) {
+            if (video.password?.trim()) { pendingVideoButton = video; pendingVideoKey = videoKey; showVideoPasswordModal(video); return; }
+            performPlayVideo(videoKey);
+        };
+        window.showVideoPasswordModal = function(video) {
+            document.getElementById('videoPasswordTitle').textContent = `🔐 请输入 ${video.title} 的密码`;
+            document.getElementById('videoPasswordSubtitle').textContent = video.passwordHint || '请联系管理员';
+            document.getElementById('videoPasswordInput').value = '';
+            document.getElementById('videoPasswordError').textContent = '';
+            document.getElementById('videoPasswordOverlay').classList.add('active');
+        };
+        window.closeVideoPasswordModal = function() { document.getElementById('videoPasswordOverlay').classList.remove('active'); pendingVideoButton = null; pendingVideoKey = null; };
+        window.confirmVideoPassword = function() {
+            if (!pendingVideoButton) { closeVideoPasswordModal(); return; }
+            if (document.getElementById('videoPasswordInput').value.trim() !== pendingVideoButton.password) {
+                document.getElementById('videoPasswordError').textContent = '密码错误';
+                document.getElementById('videoPasswordInput').value = '';
+                return;
+            }
+            if (pendingVideoKey) performPlayVideo(pendingVideoKey);
+            closeVideoPasswordModal();
+        };
+        window.handleVideoPasswordKeyPress = function(e) { if (e.key === 'Enter') confirmVideoPassword(); };
+        window.closeVideo = function() { document.getElementById('playerContainer').innerHTML = ''; document.getElementById('videoContainer').classList.remove('show'); };
+        window.closeFullscreen = function() { document.getElementById('fullscreenOverlay').classList.remove('active'); document.getElementById('fullscreenFrame').src = 'about:blank'; document.body.style.overflow = ''; };
+
+        // ========== InBox 功能 ==========
+        function getMessageId(msg) {
+            // 使用消息自带的唯一id，如果没有则用日期+标题生成一个稳定的id
+            if (msg.id) return msg.id;
+            // 如果没有id，用日期+标题+内容前50字生成一个稳定的id
+            return `${msg.date}_${msg.title}_${(msg.message || '').substring(0, 50)}`;
+        }
+
+        function loadReadStatus() {
+            const saved = localStorage.getItem('inbox_read_ids');
+            if (saved) {
+                try {
+                    const arr = JSON.parse(saved);
+                    readMessageIds = new Set(arr);
+                } catch(e) {}
+            }
+        }
+
+        function saveReadStatus() {
+            localStorage.setItem('inbox_read_ids', JSON.stringify([...readMessageIds]));
+        }
+
+        function markAsRead(msgId) {
+            if (!readMessageIds.has(msgId)) {
+                readMessageIds.add(msgId);
+                saveReadStatus();
+                updateBellBadge();
+                renderInboxDrawer();
+            }
+        }
+
+        function getUnreadCount() {
+            const messages = config?.inboxMessages || [];
+            let unread = 0;
+            messages.forEach((msg) => {
+                const msgId = getMessageId(msg);
+                if (!readMessageIds.has(msgId)) unread++;
+            });
+            return unread;
+        }
+
+        function updateBellBadge() {
+            const unreadCount = getUnreadCount();
+            const badge = document.getElementById('bellBadge');
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                badge.style.display = 'flex';
             } else {
-                document.getElementById('frontendContainer').classList.remove('hidden');
-                document.getElementById('adminContainer').classList.add('hidden');
-                renderFrontend();
+                badge.style.display = 'none';
             }
+        }
+
+        function openFullMessage(msg) {
+            const msgId = getMessageId(msg);
+            markAsRead(msgId);
+            document.getElementById('fullMessageTitle').textContent = msg.title || '通知';
+            const dateStr = msg.date ? new Date(msg.date).toLocaleString() : '未知时间';
+            document.getElementById('fullMessageDate').textContent = dateStr;
+            document.getElementById('fullMessageContent').textContent = msg.message || '';
+            document.getElementById('fullMessageOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.closeFullMessage = function() {
+            document.getElementById('fullMessageOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        function renderInboxDrawer() {
+            const container = document.getElementById('inboxContent');
+            const messages = config?.inboxMessages || [];
+            if (messages.length === 0) {
+                container.innerHTML = '<div class="inbox-empty">📭 暂无消息</div>';
+                return;
+            }
+            let html = '';
+            messages.forEach((msg) => {
+                const msgId = getMessageId(msg);
+                const isUnread = !readMessageIds.has(msgId);
+                const dateStr = msg.date ? new Date(msg.date).toLocaleString() : '未知时间';
+                const preview = (msg.message || '').substring(0, 60) + ((msg.message || '').length > 60 ? '...' : '');
+                // 转义 msg 对象用于 onclick
+                const msgStr = JSON.stringify(msg).replace(/"/g, '&quot;');
+                html += `
+                    <div class="inbox-item ${isUnread ? 'unread' : ''}" onclick="openFullMessage(${msgStr})">
+                        <div class="inbox-item-title">
+                            <span>${escapeHtml(msg.title || '通知')}</span>
+                            ${isUnread ? '<span class="unread-dot"></span>' : ''}
+                        </div>
+                        <div class="inbox-item-date">${escapeHtml(dateStr)}</div>
+                        <div class="inbox-item-preview">${escapeHtml(preview)}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderInboxAdminList() {
+            const container = document.getElementById('inboxAdminList');
+            if (!container) return;
+            const messages = config?.inboxMessages || [];
+            if (messages.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:#94a3b8; padding:20px;">暂无通知</div>';
+                return;
+            }
+            let html = '';
+            messages.forEach((msg, idx) => {
+                const dateStr = msg.date ? new Date(msg.date).toLocaleString() : '未知时间';
+                html += `
+                    <div class="inbox-list-item">
+                        <div class="inbox-list-content">
+                            <div class="inbox-list-title">${escapeHtml(msg.title || '通知')}</div>
+                            <div class="inbox-list-message">${escapeHtml((msg.message || '').substring(0, 80))}${(msg.message || '').length > 80 ? '...' : ''}</div>
+                            <div class="inbox-list-date">${escapeHtml(dateStr)}</div>
+                        </div>
+                        <button class="delete-inbox-btn" onclick="deleteInboxMessage(${idx})">删除</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        window.addInboxMessage = function() {
+            const title = document.getElementById('inboxTitle').value.trim();
+            const message = document.getElementById('inboxMessage').value.trim();
+            if (!title && !message) {
+                alert('请填写标题或内容');
+                return;
+            }
+            if (!config.inboxMessages) config.inboxMessages = [];
+            // 生成唯一且稳定的ID（使用时间戳+随机数）
+            const newMsg = {
+                id: Date.now().toString() + '_' + Math.random().toString(36).substr(2, 8),
+                title: title || '新通知',
+                message: message,
+                date: new Date().toISOString()
+            };
+            config.inboxMessages.unshift(newMsg);
+            document.getElementById('inboxTitle').value = '';
+            document.getElementById('inboxMessage').value = '';
+            renderInboxAdminList();
+            renderInboxDrawer();
+            updateBellBadge();
+            alert('通知已添加');
+        };
+
+        window.deleteInboxMessage = function(idx) {
+            if (confirm('确定删除这条通知吗？')) {
+                const msg = config.inboxMessages[idx];
+                const msgId = getMessageId(msg);
+                readMessageIds.delete(msgId);
+                config.inboxMessages.splice(idx, 1);
+                saveReadStatus();
+                renderInboxAdminList();
+                renderInboxDrawer();
+                updateBellBadge();
+            }
+        };
+
+        window.clearAllInbox = function() {
+            if (confirm('确定清空所有通知吗？不可恢复！')) {
+                readMessageIds.clear();
+                config.inboxMessages = [];
+                saveReadStatus();
+                renderInboxAdminList();
+                renderInboxDrawer();
+                updateBellBadge();
+                alert('已清空所有通知');
+            }
+        };
+
+        window.toggleInboxDrawer = function() {
+            const drawer = document.getElementById('inboxDrawer');
+            if (drawer.classList.contains('open')) {
+                drawer.classList.remove('open');
+                document.body.style.overflow = '';
+            } else {
+                renderInboxDrawer();
+                drawer.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        window.closeInboxDrawer = function() {
+            document.getElementById('inboxDrawer').classList.remove('open');
+            document.body.style.overflow = '';
         };
 
         async function loadConfig() {
             try {
                 document.getElementById('loadingMessage').style.display = 'block';
-                document.getElementById('mainContent').style.display = 'none';
-                
-                const response = await fetch(GIST_URL + '?t=' + Date.now());
-                config = await response.json();
-                
-                document.getElementById('loadingMessage').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                
-                return config;
-            } catch (error) {
-                console.error('加载配置失败，使用默认配置', error);
+                const res = await fetch(GIST_URL + '?t=' + Date.now());
+                config = await res.json();
+                if (!config.inboxMessages) config.inboxMessages = [];
+                // 确保每条消息都有稳定的id（如果从Gist加载的消息没有id，给它生成一个基于内容的稳定id）
+                config.inboxMessages.forEach((msg) => {
+                    if (!msg.id) {
+                        // 生成基于内容的稳定id，这样刷新后相同的消息会有相同的id
+                        msg.id = `${msg.date}_${(msg.title || '')}_${(msg.message || '').substring(0, 50)}`;
+                    }
+                });
+            } catch(e) {
                 config = {
                     bgInterval: 5,
-                    mobileBackgrounds: [
-                        'https://images.unsplash.com/photo-1557683316-973673baf926?w=400',
-                        'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=400'
-                    ],
-                    desktopBackgrounds: [
-                        'https://images.unsplash.com/photo-1557683316-973673baf926?w=1920',
-                        'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=1920'
-                    ],
-                    buttonSettings: {
-                        mobileSize: 70,
-                        mobileCols: 4,
-                        mobileGap: 30,
-                        desktopSize: 50,
-                        desktopCols: 10,
-                        desktopGap: 15,
-                        radius: 12,
-                        fontSize: 12
-                    },
+                    mobileBackgrounds: ['https://images.unsplash.com/photo-1557683316-973673baf926?w=400','https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=400'],
+                    desktopBackgrounds: ['https://images.unsplash.com/photo-1557683316-973673baf926?w=1920','https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=1920'],
+                    buttonSettings: { mobileSize:70, mobileCols:4, mobileGap:20, desktopSize:70, desktopCols:5, desktopGap:20, radius:18, fontSize:12 },
                     appButtons: [
-                        { 
-                            label: '防止息屏', 
-                            url: 'https://play.google.com/store/apps/details?id=com.doublep.wakey', 
-                            color: '#FF6B6B', 
-                            openType: 'fullscreen',
-                            password: '',
-                            autoRefresh: true,
-                            passwordHint: '请联系管理员获取密码'
-                        },
-                        { 
-                            label: 'AAS', 
-                            url: 'https://my5353.com/app2', 
-                            color: '#4ECDC4', 
-                            openType: 'newtab',
-                            password: '123456',
-                            autoRefresh: false,
-                            passwordHint: '默认密码是123456'
-                        }
+                        { label:'防止息屏', url:'https://play.google.com/store/apps/details?id=com.doublep.wakey', color:'#FF6B6B', iconUrl:'', openType:'fullscreen', password:'', autoRefresh:true, passwordHint:'' },
+                        { label:'AAS', url:'https://my5353.com/app2', color:'#4ECDC4', iconUrl:'', openType:'newtab', password:'123456', autoRefresh:false, passwordHint:'默认密码123456' }
                     ],
                     videoButtons: [
-                        { 
-                            label: 'SUKISU教程', 
-                            platform: 'google-drive', 
-                            fileId: '1clTYzm2fLepJZ8N3Ibs_mcd8zD_DsRSB', 
-                            youtubeUrl: '',
-                            color: '#45B7D1',
-                            password: '',
-                            passwordHint: '请联系管理员获取密码'
-                        },
-                        { 
-                            label: '第二个视频', 
-                            platform: 'youtube', 
-                            fileId: '', 
-                            youtubeUrl: 'dQw4w9WgXcQ',
-                            color: '#96CEB4',
-                            password: '123456',
-                            passwordHint: '默认密码是123456'
-                        }
-                    ]
+                        { label:'SUKISU教程', platform:'google-drive', fileId:'1clTYzm2fLepJZ8N3Ibs_mcd8zD_DsRSB', youtubeUrl:'', color:'#45B7D1', iconUrl:'', password:'', passwordHint:'' },
+                        { label:'第二个视频', platform:'youtube', fileId:'', youtubeUrl:'dQw4w9WgXcQ', color:'#96CEB4', iconUrl:'', password:'123456', passwordHint:'默认密码123456' }
+                    ],
+                    inboxMessages: []
                 };
-                document.getElementById('loadingMessage').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                
-                return config;
             }
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            loadReadStatus();
+            updateBellBadge();
+            return config;
         }
 
-        // ========== 登录弹窗控制 ==========
-        window.showLoginModal = function() {
-            document.getElementById('loginOverlay').classList.add('active');
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('username').focus();
-        };
-
-        window.closeLoginModal = function() {
-            document.getElementById('loginOverlay').classList.remove('active');
-        };
-
-        window.handleLoginKeyPress = function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                handleLogin();
-            }
-        };
-
-        document.getElementById('loginOverlay').addEventListener('click', function(e) {
-            if (e.target === document.getElementById('loginOverlay')) {
-                closeLoginModal();
-            }
-        });
-
-        window.handleLogin = function() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-                sessionStorage.setItem('lemontea_admin', 'true');
-                isAdmin = true;
-                closeLoginModal();
-                document.getElementById('frontendContainer').classList.add('hidden');
-                document.getElementById('adminContainer').classList.remove('hidden');
-                renderAdmin();
-            } else {
-                alert('账号或密码错误');
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-                document.getElementById('username').focus();
-            }
-        };
-
-        window.logout = function() {
-            sessionStorage.removeItem('lemontea_admin');
-            isAdmin = false;
-            document.getElementById('adminContainer').classList.add('hidden');
-            document.getElementById('frontendContainer').classList.remove('hidden');
-            renderFrontend();
-            updateBackgroundFromConfig();
-        };
-
-        // ========== 关闭全屏 ==========
-        window.closeFullscreen = function() {
-            const fullscreenOverlay = document.getElementById('fullscreenOverlay');
-            const fullscreenFrame = document.getElementById('fullscreenFrame');
-            fullscreenFrame.src = 'about:blank';
-            fullscreenOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        };
-
-        // ========== 渲染前台 ==========
         function renderFrontend() {
             window.videoConfig = {};
             config.videoButtons.forEach((v, idx) => {
                 let videoId = '';
-                if (v.platform === 'google-drive') {
-                    videoId = v.fileId || '';
-                } else {
+                if (v.platform === 'google-drive') videoId = v.fileId || '';
+                else {
                     let ytId = v.youtubeUrl || '';
-                    if (ytId.includes('youtu.be')) {
-                        const parts = ytId.split('/');
-                        ytId = parts[parts.length-1].split('?')[0];
-                    } else if (ytId.includes('youtube.com/watch')) {
-                        const match = ytId.match(/[?&]v=([^&]+)/);
-                        if (match) ytId = match[1];
-                    }
+                    if (ytId.includes('youtu.be')) ytId = ytId.split('/').pop().split('?')[0];
+                    else if (ytId.includes('watch')) { let m = ytId.match(/[?&]v=([^&]+)/); if(m) ytId = m[1]; }
                     videoId = ytId;
                 }
-                
-                const videoObj = {
-                    platform: v.platform,
-                    id: videoId,
-                    title: v.label || ('视频' + (idx+1)),
-                    color: v.color || getRandomColor(),
-                    password: v.password || '',
-                    passwordHint: v.passwordHint || '请联系管理员获取密码'
-                };
-                
-                window.videoConfig['video' + idx] = videoObj;
+                window.videoConfig['video'+idx] = { platform:v.platform, id:videoId, title:v.label || '视频'+(idx+1), color:v.color, iconUrl:v.iconUrl || '', password:v.password || '', passwordHint:v.passwordHint || '' };
             });
-            
-            // 渲染App下载按钮
-            const appDiv = document.getElementById('appButtons');
-            appDiv.innerHTML = '';
+            const appDiv = document.getElementById('appButtons'); appDiv.innerHTML = '';
             config.appButtons.forEach(btn => {
-                const button = document.createElement('button');
-                button.className = 'app-button';
-                button.style.backgroundColor = btn.color || getRandomColor();
-                button.style.color = 'white';
-                button.textContent = btn.label || '下载';
-                button.onclick = () => handleAppButtonClick(btn);
-                appDiv.appendChild(button);
+                const btnDiv = document.createElement('button'); btnDiv.className = 'app-button'; btnDiv.onclick = () => handleAppButtonClick(btn);
+                const iconDiv = document.createElement('div'); iconDiv.className = 'app-icon-container'; iconDiv.style.background = btn.color ? `${btn.color}40` : 'rgba(255,255,255,0.2)';
+                if (btn.iconUrl?.trim()) { const img = document.createElement('img'); img.className = 'app-icon-img'; img.src = btn.iconUrl; img.onerror = function() { this.style.display='none'; iconDiv.innerHTML='<span class="app-icon-emoji">📱</span>'; }; iconDiv.appendChild(img); }
+                else { const emoji = document.createElement('span'); emoji.className = 'app-icon-emoji'; emoji.textContent = '📱'; iconDiv.appendChild(emoji); }
+                const label = document.createElement('span'); label.className = 'app-button-label'; label.textContent = btn.label || '下载';
+                btnDiv.appendChild(iconDiv); btnDiv.appendChild(label); appDiv.appendChild(btnDiv);
             });
-            
-            // 渲染视频按钮
-            const videoDiv = document.getElementById('videoButtons');
-            videoDiv.innerHTML = '';
+            const videoDiv = document.getElementById('videoButtons'); videoDiv.innerHTML = '';
             config.videoButtons.forEach((v, idx) => {
-                const video = window.videoConfig['video' + idx];
-                const button = document.createElement('button');
-                button.className = 'app-button';
-                button.style.backgroundColor = video.color || getRandomColor();
-                button.style.color = 'white';
-                button.textContent = v.label || ('视频' + (idx+1));
-                button.onclick = () => {
-                    requestVideoPasswordAndPlay('video' + idx, video);
-                };
-                videoDiv.appendChild(button);
+                const video = window.videoConfig['video'+idx];
+                const btnDiv = document.createElement('button'); btnDiv.className = 'app-button'; btnDiv.onclick = () => requestVideoPasswordAndPlay('video'+idx, video);
+                const iconDiv = document.createElement('div'); iconDiv.className = 'app-icon-container'; iconDiv.style.background = video.color ? `${video.color}40` : 'rgba(255,255,255,0.2)';
+                if (video.iconUrl?.trim()) { const img = document.createElement('img'); img.className = 'app-icon-img'; img.src = video.iconUrl; img.onerror = function() { this.style.display='none'; iconDiv.innerHTML='<span class="app-icon-emoji">🎬</span>'; }; iconDiv.appendChild(img); }
+                else { const emoji = document.createElement('span'); emoji.className = 'app-icon-emoji'; emoji.textContent = '🎬'; iconDiv.appendChild(emoji); }
+                const label = document.createElement('span'); label.className = 'app-button-label'; label.textContent = v.label || '视频'+(idx+1);
+                btnDiv.appendChild(iconDiv); btnDiv.appendChild(label); videoDiv.appendChild(btnDiv);
             });
         }
 
-        // ========== 渲染后台 ==========
         function renderAdmin() {
             document.getElementById('adminLoading').style.display = 'none';
             document.getElementById('adminContent').style.display = 'block';
-            
-            updateBackgroundFromConfig();
-            loadButtonSettings();
-            detectDevice();
-            
-            const appAdmin = document.getElementById('appButtonsAdmin');
-            appAdmin.innerHTML = '';
+            updateBackgroundFromConfig(); loadButtonSettings();
+            renderInboxAdminList();
+            const appAdmin = document.getElementById('appButtonsAdmin'); appAdmin.innerHTML = '';
             config.appButtons.forEach((btn, idx) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="badge">📱 按钮 ${idx+1}</div>
-                    
-                    <label>按钮名称</label>
-                    <input type="text" id="app_label_${idx}" value="${(btn.label || '').replace(/"/g, '&quot;')}">
-                    
-                    <label>链接 (URL)</label>
-                    <input type="url" id="app_url_${idx}" value="${(btn.url || '').replace(/"/g, '&quot;')}">
-                    
-                    <label>背景颜色</label>
-                    <div class="color-picker-container">
-                        <input type="color" id="app_color_picker_${idx}" value="${btn.color || getRandomColor()}" onchange="updateColorText('app_color_${idx}', this.value)">
-                        <input type="text" id="app_color_${idx}" value="${btn.color || getRandomColor()}" placeholder="#FF6B6B" onchange="updateColorPicker('app_color_picker_${idx}', this.value)">
-                    </div>
-                    
-                    <label>打开方式</label>
-                    <select id="app_openType_${idx}">
-                        <option value="fullscreen" ${(btn.openType || 'fullscreen') === 'fullscreen' ? 'selected' : ''}>📱 全屏打开</option>
-                        <option value="newtab" ${(btn.openType || 'fullscreen') === 'newtab' ? 'selected' : ''}>🔗 新窗口打开</option>
-                    </select>
-                    
-                    <label>独立密码</label>
-                    <div class="password-field">
-                        <input type="password" id="app_password_${idx}" value="${(btn.password || '').replace(/"/g, '&quot;')}" placeholder="留空无密码">
-                        <span class="password-toggle" onclick="togglePasswordVisibility('app_password_${idx}')">👁️</span>
-                    </div>
-                    
-                    <label>自动刷新</label>
-                    <select id="app_autoRefresh_${idx}">
-                        <option value="true" ${btn.autoRefresh !== false ? 'selected' : ''}>✅ 开启</option>
-                        <option value="false" ${btn.autoRefresh === false ? 'selected' : ''}>❌ 关闭</option>
-                    </select>
-                    
-                    <label>密码提示</label>
-                    <input type="text" id="app_passwordHint_${idx}" value="${(btn.passwordHint || '请联系管理员获取密码').replace(/"/g, '&quot;')}" placeholder="密码提示">
-                    
-                    <div style="display: flex; gap: 8px; justify-content:flex-end;">
-                        <button class="btn-danger" onclick="removeAppButton(${idx})">🗑️ 删除</button>
-                    </div>
-                `;
+                const card = document.createElement('div'); card.className = 'card';
+                card.innerHTML = `<div class="badge">📱 按钮 ${idx+1}</div>
+                    <label>按钮名称</label><input type="text" id="app_label_${idx}" value="${(btn.label || '').replace(/"/g, '&quot;')}">
+                    <label>图标图片URL</label><input type="url" id="app_icon_${idx}" value="${(btn.iconUrl || '').replace(/"/g, '&quot;')}" placeholder="https://...">
+                    ${btn.iconUrl ? `<div class="icon-preview"><img src="${btn.iconUrl}" onerror="this.style.display='none'"> 当前图标</div>` : ''}
+                    <label>链接URL</label><input type="url" id="app_url_${idx}" value="${(btn.url || '').replace(/"/g, '&quot;')}">
+                    <label>背景颜色</label><div class="color-picker-container"><input type="color" id="app_color_picker_${idx}" value="${btn.color || getRandomColor()}" onchange="updateColorText('app_color_${idx}', this.value)"><input type="text" id="app_color_${idx}" value="${btn.color || getRandomColor()}" onchange="updateColorPicker('app_color_picker_${idx}', this.value)"></div>
+                    <label>打开方式</label><select id="app_openType_${idx}"><option value="fullscreen" ${(btn.openType||'fullscreen')==='fullscreen'?'selected':''}>全屏打开</option><option value="newtab" ${(btn.openType||'fullscreen')==='newtab'?'selected':''}>新窗口</option></select>
+                    <label>独立密码</label><div class="password-field"><input type="password" id="app_password_${idx}" value="${(btn.password||'').replace(/"/g, '&quot;')}" placeholder="留空无密码"><span class="password-toggle" onclick="togglePasswordVisibility('app_password_${idx}')">👁️</span></div>
+                    <label>自动刷新</label><select id="app_autoRefresh_${idx}"><option value="true" ${btn.autoRefresh!==false?'selected':''}>开启</option><option value="false" ${btn.autoRefresh===false?'selected':''}>关闭</option></select>
+                    <label>密码提示</label><input type="text" id="app_passwordHint_${idx}" value="${(btn.passwordHint||'').replace(/"/g, '&quot;')}">
+                    <div style="display:flex; justify-content:flex-end;"><button class="btn-danger" onclick="removeAppButton(${idx})">🗑️ 删除</button></div>`;
                 appAdmin.appendChild(card);
             });
-            
-            // 视频按钮管理
-            const videoAdmin = document.getElementById('videoButtonsAdmin');
-            videoAdmin.innerHTML = '';
+            const videoAdmin = document.getElementById('videoButtonsAdmin'); videoAdmin.innerHTML = '';
             config.videoButtons.forEach((v, idx) => {
-                const div = document.createElement('div');
-                div.className = 'video-card';
-                div.innerHTML = `
-                    <div class="flex-row">
-                        <span class="badge">🎬 视频 ${idx+1}</span>
-                        <button class="btn-danger" onclick="removeVideoButton(${idx})">🗑️ 移除</button>
-                    </div>
-                    <div class="video-grid">
-                        <label>按钮名称</label>
-                        <input type="text" id="video_label_${idx}" value="${(v.label || '').replace(/"/g, '&quot;')}">
-                        
-                        <label>平台</label>
-                        <select id="video_platform_${idx}">
-                            <option value="google-drive" ${v.platform === 'google-drive' ? 'selected' : ''}>Google Drive</option>
-                            <option value="youtube" ${v.platform === 'youtube' ? 'selected' : ''}>YouTube</option>
-                        </select>
-                        
-                        <label style="grid-column:1/2;">ID/链接</label>
-                        <div style="grid-column:2/5;">
-                            <input type="text" id="video_input_${idx}" value="${(v.platform === 'google-drive' ? v.fileId || '' : v.youtubeUrl || '')}" placeholder="${v.platform === 'google-drive' ? '文件ID' : 'YouTube URL'}">
-                        </div>
-                    </div>
-                    
-                    <div class="video-color-field">
-                        <label>按钮颜色</label>
-                        <div class="color-picker-container" style="grid-column:2/5;">
-                            <input type="color" id="video_color_picker_${idx}" value="${v.color || getRandomColor()}" onchange="updateColorText('video_color_${idx}', this.value)">
-                            <input type="text" id="video_color_${idx}" value="${v.color || getRandomColor()}" placeholder="#45B7D1" onchange="updateColorPicker('video_color_picker_${idx}', this.value)">
-                        </div>
-                    </div>
-                    
-                    <div class="video-password-field">
-                        <label>独立密码</label>
-                        <div class="password-field" style="grid-column:2/3;">
-                            <input type="password" id="video_password_${idx}" value="${(v.password || '').replace(/"/g, '&quot;')}" placeholder="留空无密码">
-                            <span class="password-toggle" onclick="togglePasswordVisibility('video_password_${idx}')">👁️</span>
-                        </div>
-                        
-                        <label>密码提示</label>
-                        <input type="text" id="video_passwordHint_${idx}" value="${(v.passwordHint || '请联系管理员获取密码').replace(/"/g, '&quot;')}" placeholder="密码提示" style="grid-column:2/5;">
-                    </div>
-                `;
+                const div = document.createElement('div'); div.className = 'video-card';
+                div.innerHTML = `<div class="flex-row" style="display:flex; justify-content:space-between;"><span class="badge">🎬 视频 ${idx+1}</span><button class="btn-danger" onclick="removeVideoButton(${idx})">🗑️ 移除</button></div>
+                    <div class="video-grid"><label>按钮名称</label><input type="text" id="video_label_${idx}" value="${(v.label||'').replace(/"/g, '&quot;')}">
+                    <label>平台</label><select id="video_platform_${idx}"><option value="google-drive" ${v.platform==='google-drive'?'selected':''}>Google Drive</option><option value="youtube" ${v.platform==='youtube'?'selected':''}>YouTube</option></select>
+                    <label>ID/链接</label><input type="text" id="video_input_${idx}" value="${(v.platform==='google-drive'? v.fileId||'' : v.youtubeUrl||'').replace(/"/g, '&quot;')}"></div>
+                    <div class="icon-url-field"><label>图标图片URL</label><div style="grid-column:2/5;"><input type="url" id="video_icon_${idx}" value="${(v.iconUrl||'').replace(/"/g, '&quot;')}" placeholder="https://...">${v.iconUrl ? `<div class="icon-preview"><img src="${v.iconUrl}" onerror="this.style.display='none'"> 当前图标</div>` : ''}</div></div>
+                    <div class="video-color-field"><label>按钮颜色</label><div class="color-picker-container" style="grid-column:2/5;"><input type="color" id="video_color_picker_${idx}" value="${v.color||getRandomColor()}" onchange="updateColorText('video_color_${idx}', this.value)"><input type="text" id="video_color_${idx}" value="${v.color||getRandomColor()}" onchange="updateColorPicker('video_color_picker_${idx}', this.value)"></div></div>
+                    <div class="video-password-field"><label>独立密码</label><div class="password-field" style="grid-column:2/3;"><input type="password" id="video_password_${idx}" value="${(v.password||'').replace(/"/g, '&quot;')}" placeholder="留空无密码"><span class="password-toggle" onclick="togglePasswordVisibility('video_password_${idx}')">👁️</span></div>
+                    <label>密码提示</label><input type="text" id="video_passwordHint_${idx}" value="${(v.passwordHint||'').replace(/"/g, '&quot;')}" style="grid-column:2/5;"></div>`;
                 videoAdmin.appendChild(div);
             });
         }
 
-        // 颜色选择器同步函数
-        window.updateColorText = function(textInputId, colorValue) {
-            const textInput = document.getElementById(textInputId);
-            if (textInput) {
-                textInput.value = colorValue;
+        window.updateColorText = function(id, val) { const el = document.getElementById(id); if(el) el.value = val; };
+        window.updateColorPicker = function(id, val) { const el = document.getElementById(id); if(el && /^#[0-9A-F]{6}$/i.test(val)) el.value = val; };
+        window.togglePasswordVisibility = function(id) { const inp = document.getElementById(id); if(inp) inp.type = inp.type === 'password' ? 'text' : 'password'; };
+        window.addAppButton = function() { config.appButtons.push({ label:'新下载', url:'https://', color:getRandomColor(), iconUrl:'', openType:'fullscreen', password:'', autoRefresh:true, passwordHint:'' }); renderAdmin(); };
+        window.removeAppButton = function(i) { config.appButtons.splice(i,1); renderAdmin(); };
+        window.addVideoButton = function() { config.videoButtons.push({ label:'新视频', platform:'youtube', youtubeUrl:'', color:getRandomColor(), iconUrl:'', password:'', passwordHint:'' }); renderAdmin(); };
+        window.removeVideoButton = function(i) { config.videoButtons.splice(i,1); renderAdmin(); };
+
+        function updateBackgroundFromConfig() {
+            if(config){
+                document.getElementById('mobileBgInput1').value = config.mobileBackgrounds?.[0] || '';
+                document.getElementById('mobileBgInput2').value = config.mobileBackgrounds?.[1] || '';
+                document.getElementById('desktopBgInput1').value = config.desktopBackgrounds?.[0] || '';
+                document.getElementById('desktopBgInput2').value = config.desktopBackgrounds?.[1] || '';
+                document.getElementById('bgInterval').value = config.bgInterval || 5;
+                document.getElementById('bgIntervalDisplay').textContent = config.bgInterval || 5;
             }
-        };
+            updateBackgroundByDevice(); startBackgroundTimer();
+        }
 
-        window.updateColorPicker = function(pickerId, colorValue) {
-            const picker = document.getElementById(pickerId);
-            if (picker && /^#[0-9A-F]{6}$/i.test(colorValue)) {
-                picker.value = colorValue;
-            }
-        };
-
-        window.togglePasswordVisibility = function(inputId) {
-            const input = document.getElementById(inputId);
-            if (input.type === 'password') {
-                input.type = 'text';
-            } else {
-                input.type = 'password';
-            }
-        };
-
-        window.addAppButton = function() {
-            config.appButtons.push({ 
-                label: '新下载', 
-                url: 'https://', 
-                color: getRandomColor(),
-                openType: 'fullscreen',
-                password: '',
-                autoRefresh: true,
-                passwordHint: '请联系管理员获取密码'
-            });
-            renderAdmin();
-        };
-
-        window.removeAppButton = function(index) {
-            config.appButtons.splice(index, 1);
-            renderAdmin();
-        };
-
-        window.addVideoButton = function() {
-            config.videoButtons.push({ 
-                label: '新视频', 
-                platform: 'google-drive', 
-                fileId: '', 
-                youtubeUrl: '',
-                color: getRandomColor(),
-                password: '',
-                passwordHint: '请联系管理员获取密码'
-            });
-            renderAdmin();
-        };
-
-        window.removeVideoButton = function(index) {
-            config.videoButtons.splice(index, 1);
-            renderAdmin();
-        };
+        function showCopySuccessMessage() {
+            const toast = document.createElement('div');
+            toast.textContent = '✅ 配置已复制到剪贴板！';
+            toast.style.position = 'fixed';
+            toast.style.bottom = '80px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.backgroundColor = 'rgba(0,0,0,0.85)';
+            toast.style.color = '#FFD447';
+            toast.style.padding = '12px 24px';
+            toast.style.borderRadius = '40px';
+            toast.style.fontSize = '14px';
+            toast.style.zIndex = '9999';
+            toast.style.backdropFilter = 'blur(10px)';
+            toast.style.border = '1px solid rgba(255,212,71,0.5)';
+            toast.style.fontWeight = '500';
+            toast.style.whiteSpace = 'nowrap';
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 2000);
+        }
 
         window.openGistEdit = function() {
             const mobileUrl1 = document.getElementById('mobileBgInput1').value.trim() || 'https://images.unsplash.com/photo-1557683316-973673baf926?w=400';
@@ -2124,97 +1604,89 @@
             const desktopUrl2 = document.getElementById('desktopBgInput2').value.trim() || 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=1920';
             const bgInterval = parseInt(document.getElementById('bgInterval').value) || 5;
             
-            // 收集按钮设置
             const buttonSettings = {
-                mobileSize: document.getElementById('mobileSize').value,
-                mobileCols: document.getElementById('mobileCols').value,
-                mobileGap: document.getElementById('mobileGap').value,
-                desktopSize: document.getElementById('desktopSize').value,
-                desktopCols: document.getElementById('desktopCols').value,
-                desktopGap: document.getElementById('desktopGap').value,
-                radius: document.getElementById('buttonRadius').value,
-                fontSize: document.getElementById('buttonFontSize').value
+                mobileSize: document.getElementById('mobileSize').value, mobileCols: document.getElementById('mobileCols').value,
+                mobileGap: document.getElementById('mobileGap').value, desktopSize: document.getElementById('desktopSize').value,
+                desktopCols: document.getElementById('desktopCols').value, desktopGap: document.getElementById('desktopGap').value,
+                radius: document.getElementById('buttonRadius').value, fontSize: document.getElementById('buttonFontSize').value
             };
+            
+            const appButtonsData = [];
+            for (let i = 0; i < config.appButtons.length; i++) {
+                appButtonsData.push({
+                    label: document.getElementById(`app_label_${i}`)?.value || '按钮',
+                    url: document.getElementById(`app_url_${i}`)?.value || 'https://',
+                    iconUrl: document.getElementById(`app_icon_${i}`)?.value || '',
+                    color: document.getElementById(`app_color_${i}`)?.value || getRandomColor(),
+                    openType: document.getElementById(`app_openType_${i}`)?.value || 'fullscreen',
+                    password: document.getElementById(`app_password_${i}`)?.value || '',
+                    autoRefresh: document.getElementById(`app_autoRefresh_${i}`)?.value === 'true',
+                    passwordHint: document.getElementById(`app_passwordHint_${i}`)?.value || ''
+                });
+            }
+            
+            const videoButtonsData = [];
+            for (let i = 0; i < config.videoButtons.length; i++) {
+                const platform = document.getElementById(`video_platform_${i}`)?.value || 'google-drive';
+                const inputVal = document.getElementById(`video_input_${i}`)?.value || '';
+                videoButtonsData.push({
+                    label: document.getElementById(`video_label_${i}`)?.value || '视频',
+                    platform: platform,
+                    fileId: platform === 'google-drive' ? inputVal : '',
+                    youtubeUrl: platform === 'youtube' ? inputVal : '',
+                    iconUrl: document.getElementById(`video_icon_${i}`)?.value || '',
+                    color: document.getElementById(`video_color_${i}`)?.value || getRandomColor(),
+                    password: document.getElementById(`video_password_${i}`)?.value || '',
+                    passwordHint: document.getElementById(`video_passwordHint_${i}`)?.value || ''
+                });
+            }
             
             const currentConfig = {
                 bgInterval: bgInterval,
                 mobileBackgrounds: [mobileUrl1, mobileUrl2],
                 desktopBackgrounds: [desktopUrl1, desktopUrl2],
                 buttonSettings: buttonSettings,
-                appButtons: config.appButtons.map((_, idx) => ({
-                    label: document.getElementById(`app_label_${idx}`)?.value || '按钮',
-                    url: document.getElementById(`app_url_${idx}`)?.value || 'https://',
-                    color: document.getElementById(`app_color_${idx}`)?.value || getRandomColor(),
-                    openType: document.getElementById(`app_openType_${idx}`)?.value || 'fullscreen',
-                    password: document.getElementById(`app_password_${idx}`)?.value || '',
-                    autoRefresh: document.getElementById(`app_autoRefresh_${idx}`)?.value === 'true',
-                    passwordHint: document.getElementById(`app_passwordHint_${idx}`)?.value || '请联系管理员获取密码'
-                })),
-                videoButtons: config.videoButtons.map((_, idx) => {
-                    const platform = document.getElementById(`video_platform_${idx}`)?.value || 'google-drive';
-                    const inputVal = document.getElementById(`video_input_${idx}`)?.value || '';
-                    return {
-                        label: document.getElementById(`video_label_${idx}`)?.value || '视频',
-                        platform: platform,
-                        fileId: platform === 'google-drive' ? inputVal : '',
-                        youtubeUrl: platform === 'youtube' ? inputVal : '',
-                        color: document.getElementById(`video_color_${idx}`)?.value || getRandomColor(),
-                        password: document.getElementById(`video_password_${idx}`)?.value || '',
-                        passwordHint: document.getElementById(`video_passwordHint_${idx}`)?.value || '请联系管理员获取密码'
-                    };
-                })
+                appButtons: appButtonsData,
+                videoButtons: videoButtonsData,
+                inboxMessages: config.inboxMessages || []
             };
             
             const configStr = JSON.stringify(currentConfig, null, 2);
-            alert('👉 步骤：\n1. 复制弹出的配置内容\n2. 点击确定后打开 Gist\n3. 粘贴覆盖原有内容\n4. 点击 Update 保存');
-            prompt('复制这个配置', configStr);
-            window.open(GIST_EDIT_URL, '_blank');
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(configStr).then(function() {
+                    showCopySuccessMessage();
+                    window.open(GIST_EDIT_URL, '_blank');
+                }).catch(function(err) {
+                    console.error('复制失败: ', err);
+                    prompt('请复制以下配置内容：', configStr);
+                    window.open(GIST_EDIT_URL, '_blank');
+                });
+            } else {
+                prompt('请复制以下配置内容：', configStr);
+                window.open(GIST_EDIT_URL, '_blank');
+            }
         };
 
-        // ========== 播放视频（只改了这个函数，添加包装器和右上角遮罩） ==========
-        function performPlayVideo(videoKey) {
-            const video = window.videoConfig[videoKey];
-            if (!video) return;
-            
-            closeFullscreen();
-            
-            document.getElementById('videoTitle').textContent = `正在播放：${video.title}`;
-            const playerContainer = document.getElementById('playerContainer');
-            playerContainer.innerHTML = '';
-            
-            // 创建包装器（用于放置遮罩）
-            const wrapper = document.createElement('div');
-            wrapper.className = 'player-wrapper';
-            
-            if (video.platform === 'google-drive') {
-                const iframe = document.createElement('iframe');
-                iframe.className = 'drive-player';
-                iframe.src = `https://drive.google.com/file/d/${video.id}/preview`;
-                iframe.allow = 'autoplay; encrypted-media';
-                iframe.allowFullscreen = true;
-                wrapper.appendChild(iframe);
-                
-                // 添加右上角遮罩 - 遮挡"在新窗口中打开"按钮
-                const topMask = document.createElement('div');
-                topMask.className = 'drive-top-right-mask';
-                wrapper.appendChild(topMask);
-            } else {
-                const iframe = document.createElement('iframe');
-                iframe.className = 'youtube-player';
-                iframe.src = `https://www.youtube.com/embed/${video.id}?autoplay=1`;
-                iframe.allow = 'accelerometer; autoplay; encrypted-media';
-                iframe.allowFullscreen = true;
-                wrapper.appendChild(iframe);
-            }
-            
-            playerContainer.appendChild(wrapper);
-            document.getElementById('videoContainer').classList.add('show');
-            document.getElementById('videoContainer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
+        window.showLoginModal = function() { document.getElementById('loginOverlay').classList.add('active'); };
+        window.closeLoginModal = function() { document.getElementById('loginOverlay').classList.remove('active'); };
+        window.handleLoginKeyPress = function(e) { if (e.key === 'Enter') handleLogin(); };
+        window.handleLogin = function() {
+            if (document.getElementById('username').value === ADMIN_CREDENTIALS.username && document.getElementById('password').value === ADMIN_CREDENTIALS.password) {
+                sessionStorage.setItem('lemontea_admin', 'true'); isAdmin = true; closeLoginModal();
+                document.getElementById('frontendContainer').classList.add('hidden'); document.getElementById('adminContainer').classList.remove('hidden');
+                renderAdmin();
+            } else alert('账号或密码错误');
+        };
+        window.logout = function() { sessionStorage.removeItem('lemontea_admin'); isAdmin = false; location.reload(); };
 
-        window.closeVideo = function() {
-            document.getElementById('playerContainer').innerHTML = '';
-            document.getElementById('videoContainer').classList.remove('show');
+        window.onload = async function() {
+            await loadConfig();
+            updateBackgroundFromConfig();
+            loadButtonSettings();
+            detectDevice();
+            if (isAdmin) { document.getElementById('frontendContainer').classList.add('hidden'); document.getElementById('adminContainer').classList.remove('hidden'); renderAdmin(); }
+            else { document.getElementById('frontendContainer').classList.remove('hidden'); document.getElementById('adminContainer').classList.add('hidden'); renderFrontend(); }
         };
     </script>
 </body>
