@@ -418,6 +418,7 @@
             line-height: 1.3;
         }
 
+        /* 视频容器外层相对定位 */
         .video-container {
             margin-top: 30px;
             display: none;
@@ -425,6 +426,7 @@
             border-radius: 16px;
             padding: 10px;
             text-align: center;
+            position: relative; 
         }
         
         .video-container.show { display: block; animation: fadeIn 0.5s ease; }
@@ -439,6 +441,19 @@
             height: 300px;
             border-radius: 12px;
             border: none;
+        }
+        
+        /* 核心防跳转机制：针对Google云端硬盘右上角弹出按钮的绝对定位隐形防撞墙 */
+        .drive-shield {
+            position: absolute;
+            top: 45px;      /* 视频控制台顶部向下偏移量 */
+            right: 10px;    /* 贴合右侧边框 */
+            width: 75px;    /* 足够覆盖右上角跳转图标的宽度 */
+            height: 55px;   /* 覆盖高度 */
+            background: transparent;
+            z-index: 999;   /* 凌驾于 iframe 之上 */
+            display: none;  /* 默认隐藏，只有云端硬盘视频才启用 */
+            cursor: default;
         }
         
         .video-title {
@@ -889,6 +904,7 @@
 
     <div class="device-indicator" id="deviceIndicator">加载中...</div>
     
+    <!-- 顶部按钮容器 - 左右布局 -->
     <div class="top-bar">
         <div class="login-entrance" onclick="showLoginModal()">🔐登录</div>
         <div class="inbox-bell" onclick="toggleInboxDrawer()">
@@ -897,6 +913,7 @@
         </div>
     </div>
 
+    <!-- InBox 抽屉面板 -->
     <div id="inboxDrawer" class="inbox-drawer">
         <div class="inbox-header">
             <h3>📬 收件箱</h3>
@@ -907,6 +924,7 @@
         </div>
     </div>
 
+    <!-- 全文查看弹窗 -->
     <div id="fullMessageOverlay" class="full-message-overlay">
         <div class="full-message-box">
             <div class="full-message-title" id="fullMessageTitle"></div>
@@ -932,7 +950,10 @@
             <h2 style="font-size: 18px; margin-bottom: 25px; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">🍋 请选择下载或观看视频</h2>
             <div class="button-grid" id="appButtons"></div>
             <div class="button-grid" id="videoButtons"></div>
+            
             <div id="videoContainer" class="video-container">
+                <!-- 隐形防撞盾牌 -->
+                <div id="driveShield" class="drive-shield"></div>
                 <div class="video-title" id="videoTitle">正在播放</div>
                 <div id="playerContainer" style="width:100%; height:300px; border-radius:12px;"></div>
                 <button class="close-video" onclick="closeVideo()">关闭视频</button>
@@ -947,6 +968,7 @@
         </div>
         <div id="adminLoading" class="loading" style="color:#1e293b;">加载中...</div>
         <div id="adminContent" style="display: none;">
+            <!-- InBox 管理模块 -->
             <h2>📬 InBox 通知管理</h2>
             <div class="inbox-admin-section">
                 <div class="inbox-add-form">
@@ -1067,7 +1089,6 @@
         let pendingVideoButton = null;
         let pendingVideoKey = null;
         
-        // InBox 相关变量
         let readMessageIds = new Set();
         function getRandomColor() { return COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)]; }
 
@@ -1218,11 +1239,15 @@
             const iframe = document.createElement('iframe');
             iframe.className = video.platform === 'google-drive' ? 'drive-player' : 'youtube-player';
             
-            // 核心修复：对 Google Drive 视频进行处理，将其 /preview 结构改成极简模式 /view?rm=minimal，去掉右上角的跳转和顶部条
+            // 恢复为最稳定的 /preview 链接，确保播放成功率 100%
             if (video.platform === 'google-drive') {
-                iframe.src = `https://drive.google.com/file/d/${video.id}/view?rm=minimal`;
+                iframe.src = `https://drive.google.com/file/d/${video.id}/preview`;
+                // 显示隐形防撞墙，挡住右上角
+                document.getElementById('driveShield').style.display = 'block';
             } else {
                 iframe.src = `https://www.youtube.com/embed/${video.id}?autoplay=1`;
+                // YouTube 无需遮挡
+                document.getElementById('driveShield').style.display = 'none';
             }
             
             iframe.allow = 'autoplay; encrypted-media'; iframe.allowFullscreen = true;
@@ -1253,7 +1278,11 @@
             closeVideoPasswordModal();
         };
         window.handleVideoPasswordKeyPress = function(e) { if (e.key === 'Enter') confirmVideoPassword(); };
-        window.closeVideo = function() { document.getElementById('playerContainer').innerHTML = ''; document.getElementById('videoContainer').classList.remove('show'); };
+        window.closeVideo = function() { 
+            document.getElementById('playerContainer').innerHTML = ''; 
+            document.getElementById('videoContainer').classList.remove('show');
+            document.getElementById('driveShield').style.display = 'none'; // 关闭视频时隐藏防撞墙
+        };
         window.closeFullscreen = function() { document.getElementById('fullscreenOverlay').classList.remove('active'); document.getElementById('fullscreenFrame').src = 'about:blank'; document.body.style.overflow = ''; };
         
         // ========== InBox 功能 ==========
@@ -1508,8 +1537,7 @@
                 if (btn.iconUrl?.trim()) { const img = document.createElement('img'); img.className = 'app-icon-img'; img.src = btn.iconUrl; img.onerror = function() { this.style.display='none'; iconDiv.innerHTML='<span class="app-icon-emoji">📱</span>'; }; iconDiv.appendChild(img); }
                 else { const emoji = document.createElement('span'); emoji.className = 'app-icon-emoji'; emoji.textContent = '📱'; iconDiv.appendChild(emoji); }
                 const label = document.createElement('span'); label.className = 'app-button-label'; label.textContent = btn.label || '下载';
-                btnDiv.appendChild(iconDiv);
-                btnDiv.appendChild(label); appDiv.appendChild(btnDiv);
+                btnDiv.appendChild(iconDiv); btnDiv.appendChild(label); appDiv.appendChild(btnDiv);
             });
             
             const videoDiv = document.getElementById('videoButtons'); videoDiv.innerHTML = '';
@@ -1519,13 +1547,11 @@
                 const iconDiv = document.createElement('div'); iconDiv.className = 'app-icon-container'; iconDiv.style.background = video.color ? `${video.color}40` : 'rgba(255,255,255,0.2)';
                 if (video.iconUrl?.trim()) { const img = document.createElement('img'); img.className = 'app-icon-img'; img.src = video.iconUrl; img.onerror = function() { this.style.display='none'; iconDiv.innerHTML='<span class="app-icon-emoji">🎬</span>'; }; iconDiv.appendChild(img); }
                 else { const emoji = document.createElement('span'); emoji.className = 'app-icon-emoji'; emoji.textContent = '🎬'; iconDiv.appendChild(emoji); }
-                const label = document.createElement('span'); label.className = 'app-button-label';
-                label.textContent = v.label || '视频'+(idx+1);
+                const label = document.createElement('span'); label.className = 'app-button-label'; label.textContent = v.label || '视频'+(idx+1);
                 btnDiv.appendChild(iconDiv); btnDiv.appendChild(label); videoDiv.appendChild(btnDiv);
             });
         }
 
-        // 核心优化：修改 renderAdmin，添加同步写入 input 状态，避免由于重绘时 ID 动态绑定导致按钮和链接“跑掉”或乱序
         function renderAdmin() {
             document.getElementById('adminLoading').style.display = 'none';
             document.getElementById('adminContent').style.display = 'block';
@@ -1567,10 +1593,8 @@
             });
         }
 
-        // 新增数据实时同步防走丢机制
         window.syncAdminData = function() {
             if (!config) return;
-            // 同步App数据
             for (let i = 0; i < config.appButtons.length; i++) {
                 if(document.getElementById(`app_label_${i}`)) {
                     config.appButtons[i].label = document.getElementById(`app_label_${i}`).value;
@@ -1583,7 +1607,6 @@
                     config.appButtons[i].passwordHint = document.getElementById(`app_passwordHint_${i}`).value;
                 }
             }
-            // 同步视频数据
             for (let i = 0; i < config.videoButtons.length; i++) {
                 if(document.getElementById(`video_label_${i}`)) {
                     const platform = document.getElementById(`video_platform_${i}`).value;
