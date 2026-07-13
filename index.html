@@ -889,7 +889,6 @@
 
     <div class="device-indicator" id="deviceIndicator">加载中...</div>
     
-    <!-- 顶部按钮容器 - 左右布局 -->
     <div class="top-bar">
         <div class="login-entrance" onclick="showLoginModal()">🔐登录</div>
         <div class="inbox-bell" onclick="toggleInboxDrawer()">
@@ -898,7 +897,6 @@
         </div>
     </div>
 
-    <!-- InBox 抽屉面板 -->
     <div id="inboxDrawer" class="inbox-drawer">
         <div class="inbox-header">
             <h3>📬 收件箱</h3>
@@ -909,7 +907,6 @@
         </div>
     </div>
 
-    <!-- 全文查看弹窗 -->
     <div id="fullMessageOverlay" class="full-message-overlay">
         <div class="full-message-box">
             <div class="full-message-title" id="fullMessageTitle"></div>
@@ -950,7 +947,6 @@
         </div>
         <div id="adminLoading" class="loading" style="color:#1e293b;">加载中...</div>
         <div id="adminContent" style="display: none;">
-            <!-- InBox 管理模块 -->
             <h2>📬 InBox 通知管理</h2>
             <div class="inbox-admin-section">
                 <div class="inbox-add-form">
@@ -1013,7 +1009,7 @@
             <button class="btn-primary" onclick="addAppButton()" style="margin-top:20px;">➕ 新增下载按钮</button>
 
             <h2 style="margin-top:48px;">🎬 视频按钮</h2>
-            <div id="videoButtonsAdmin"></div>
+            <div id="videoButtonsAdmin" class="card-grid"></div>
             <button class="btn-primary" onclick="addVideoButton()" style="margin-top:10px;">➕ 新增视频按钮</button>
 
             <div class="publish-bar">
@@ -1073,7 +1069,6 @@
         
         // InBox 相关变量
         let readMessageIds = new Set();
-
         function getRandomColor() { return COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)]; }
 
         function updateMobileSize(v) { document.documentElement.style.setProperty('--button-mobile-size', v+'px'); document.getElementById('mobileSizeValue').textContent = v+'px'; }
@@ -1097,9 +1092,11 @@
         }
 
         function resetButtonSettings() {
-            document.getElementById('mobileSize').value = 70; document.getElementById('mobileCols').value = 4; document.getElementById('mobileGap').value = 20;
+            document.getElementById('mobileSize').value = 70;
+            document.getElementById('mobileCols').value = 4; document.getElementById('mobileGap').value = 20;
             document.getElementById('desktopSize').value = 70; document.getElementById('desktopCols').value = 5; document.getElementById('desktopGap').value = 20;
-            document.getElementById('buttonRadius').value = 18; document.getElementById('buttonFontSize').value = 12;
+            document.getElementById('buttonRadius').value = 18;
+            document.getElementById('buttonFontSize').value = 12;
             updateMobileSize(70); updateMobileCols(4); updateMobileGap(20);
             updateDesktopSize(70); updateDesktopCols(5); updateDesktopGap(20);
             updateButtonRadius(18); updateButtonFontSize(12);
@@ -1131,10 +1128,12 @@
             const device = detectDevice();
             let bg1, bg2;
             if (device === 'mobile') {
-                bg1 = document.getElementById('mobileBg1'); bg2 = document.getElementById('mobileBg2');
+                bg1 = document.getElementById('mobileBg1');
+                bg2 = document.getElementById('mobileBg2');
                 document.querySelector('.bg-mobile').style.display = 'block'; document.querySelector('.bg-desktop').style.display = 'none';
             } else {
-                bg1 = document.getElementById('desktopBg1'); bg2 = document.getElementById('desktopBg2');
+                bg1 = document.getElementById('desktopBg1');
+                bg2 = document.getElementById('desktopBg2');
                 document.querySelector('.bg-mobile').style.display = 'none'; document.querySelector('.bg-desktop').style.display = 'block';
             }
             const bgs = device === 'mobile' ? config?.mobileBackgrounds : config?.desktopBackgrounds;
@@ -1189,7 +1188,6 @@
             if (btn.password?.trim()) { pendingAppButton = btn; showAppPasswordModal(btn); return; }
             executeAppButtonOpen(btn);
         };
-
         window.showAppPasswordModal = function(btn) {
             document.getElementById('appPasswordTitle').textContent = `🔐 请输入 ${btn.label} 的密码`;
             document.getElementById('appPasswordSubtitle').textContent = btn.passwordHint || '请联系管理员';
@@ -1209,7 +1207,7 @@
             closeAppPasswordModal();
         };
         window.handleAppPasswordKeyPress = function(e) { if (e.key === 'Enter') confirmAppPassword(); };
-
+        
         function performPlayVideo(videoKey) {
             const video = window.videoConfig[videoKey];
             if (!video) return;
@@ -1219,7 +1217,14 @@
             container.innerHTML = '';
             const iframe = document.createElement('iframe');
             iframe.className = video.platform === 'google-drive' ? 'drive-player' : 'youtube-player';
-            iframe.src = video.platform === 'google-drive' ? `https://drive.google.com/file/d/${video.id}/preview` : `https://www.youtube.com/embed/${video.id}?autoplay=1`;
+            
+            // 核心修复：对 Google Drive 视频进行处理，将其 /preview 结构改成极简模式 /view?rm=minimal，去掉右上角的跳转和顶部条
+            if (video.platform === 'google-drive') {
+                iframe.src = `https://drive.google.com/file/d/${video.id}/view?rm=minimal`;
+            } else {
+                iframe.src = `https://www.youtube.com/embed/${video.id}?autoplay=1`;
+            }
+            
             iframe.allow = 'autoplay; encrypted-media'; iframe.allowFullscreen = true;
             container.appendChild(iframe);
             document.getElementById('videoContainer').classList.add('show');
@@ -1250,12 +1255,10 @@
         window.handleVideoPasswordKeyPress = function(e) { if (e.key === 'Enter') confirmVideoPassword(); };
         window.closeVideo = function() { document.getElementById('playerContainer').innerHTML = ''; document.getElementById('videoContainer').classList.remove('show'); };
         window.closeFullscreen = function() { document.getElementById('fullscreenOverlay').classList.remove('active'); document.getElementById('fullscreenFrame').src = 'about:blank'; document.body.style.overflow = ''; };
-
+        
         // ========== InBox 功能 ==========
         function getMessageId(msg) {
-            // 使用消息自带的唯一id，如果没有则用日期+标题生成一个稳定的id
             if (msg.id) return msg.id;
-            // 如果没有id，用日期+标题+内容前50字生成一个稳定的id
             return `${msg.date}_${msg.title}_${(msg.message || '').substring(0, 50)}`;
         }
 
@@ -1332,7 +1335,6 @@
                 const isUnread = !readMessageIds.has(msgId);
                 const dateStr = msg.date ? new Date(msg.date).toLocaleString() : '未知时间';
                 const preview = (msg.message || '').substring(0, 60) + ((msg.message || '').length > 60 ? '...' : '');
-                // 转义 msg 对象用于 onclick
                 const msgStr = JSON.stringify(msg).replace(/"/g, '&quot;');
                 html += `
                     <div class="inbox-item ${isUnread ? 'unread' : ''}" onclick="openFullMessage(${msgStr})">
@@ -1391,7 +1393,6 @@
                 return;
             }
             if (!config.inboxMessages) config.inboxMessages = [];
-            // 生成唯一且稳定的ID（使用时间戳+随机数）
             const newMsg = {
                 id: Date.now().toString() + '_' + Math.random().toString(36).substr(2, 8),
                 title: title || '新通知',
@@ -1406,7 +1407,6 @@
             updateBellBadge();
             alert('通知已添加');
         };
-
         window.deleteInboxMessage = function(idx) {
             if (confirm('确定删除这条通知吗？')) {
                 const msg = config.inboxMessages[idx];
@@ -1419,7 +1419,6 @@
                 updateBellBadge();
             }
         };
-
         window.clearAllInbox = function() {
             if (confirm('确定清空所有通知吗？不可恢复！')) {
                 readMessageIds.clear();
@@ -1431,7 +1430,6 @@
                 alert('已清空所有通知');
             }
         };
-
         window.toggleInboxDrawer = function() {
             const drawer = document.getElementById('inboxDrawer');
             if (drawer.classList.contains('open')) {
@@ -1443,22 +1441,22 @@
                 document.body.style.overflow = 'hidden';
             }
         };
-
         window.closeInboxDrawer = function() {
             document.getElementById('inboxDrawer').classList.remove('open');
             document.body.style.overflow = '';
         };
-
+        
         async function loadConfig() {
             try {
                 document.getElementById('loadingMessage').style.display = 'block';
                 const res = await fetch(GIST_URL + '?t=' + Date.now());
                 config = await res.json();
                 if (!config.inboxMessages) config.inboxMessages = [];
-                // 确保每条消息都有稳定的id（如果从Gist加载的消息没有id，给它生成一个基于内容的稳定id）
+                if (!config.appButtons) config.appButtons = [];
+                if (!config.videoButtons) config.videoButtons = [];
+                
                 config.inboxMessages.forEach((msg) => {
                     if (!msg.id) {
-                        // 生成基于内容的稳定id，这样刷新后相同的消息会有相同的id
                         msg.id = `${msg.date}_${(msg.title || '')}_${(msg.message || '').substring(0, 50)}`;
                     }
                 });
@@ -1488,6 +1486,9 @@
 
         function renderFrontend() {
             window.videoConfig = {};
+            if (!config.videoButtons) config.videoButtons = [];
+            if (!config.appButtons) config.appButtons = [];
+
             config.videoButtons.forEach((v, idx) => {
                 let videoId = '';
                 if (v.platform === 'google-drive') videoId = v.fileId || '';
@@ -1499,6 +1500,7 @@
                 }
                 window.videoConfig['video'+idx] = { platform:v.platform, id:videoId, title:v.label || '视频'+(idx+1), color:v.color, iconUrl:v.iconUrl || '', password:v.password || '', passwordHint:v.passwordHint || '' };
             });
+            
             const appDiv = document.getElementById('appButtons'); appDiv.innerHTML = '';
             config.appButtons.forEach(btn => {
                 const btnDiv = document.createElement('button'); btnDiv.className = 'app-button'; btnDiv.onclick = () => handleAppButtonClick(btn);
@@ -1506,8 +1508,10 @@
                 if (btn.iconUrl?.trim()) { const img = document.createElement('img'); img.className = 'app-icon-img'; img.src = btn.iconUrl; img.onerror = function() { this.style.display='none'; iconDiv.innerHTML='<span class="app-icon-emoji">📱</span>'; }; iconDiv.appendChild(img); }
                 else { const emoji = document.createElement('span'); emoji.className = 'app-icon-emoji'; emoji.textContent = '📱'; iconDiv.appendChild(emoji); }
                 const label = document.createElement('span'); label.className = 'app-button-label'; label.textContent = btn.label || '下载';
-                btnDiv.appendChild(iconDiv); btnDiv.appendChild(label); appDiv.appendChild(btnDiv);
+                btnDiv.appendChild(iconDiv);
+                btnDiv.appendChild(label); appDiv.appendChild(btnDiv);
             });
+            
             const videoDiv = document.getElementById('videoButtons'); videoDiv.innerHTML = '';
             config.videoButtons.forEach((v, idx) => {
                 const video = window.videoConfig['video'+idx];
@@ -1515,54 +1519,111 @@
                 const iconDiv = document.createElement('div'); iconDiv.className = 'app-icon-container'; iconDiv.style.background = video.color ? `${video.color}40` : 'rgba(255,255,255,0.2)';
                 if (video.iconUrl?.trim()) { const img = document.createElement('img'); img.className = 'app-icon-img'; img.src = video.iconUrl; img.onerror = function() { this.style.display='none'; iconDiv.innerHTML='<span class="app-icon-emoji">🎬</span>'; }; iconDiv.appendChild(img); }
                 else { const emoji = document.createElement('span'); emoji.className = 'app-icon-emoji'; emoji.textContent = '🎬'; iconDiv.appendChild(emoji); }
-                const label = document.createElement('span'); label.className = 'app-button-label'; label.textContent = v.label || '视频'+(idx+1);
+                const label = document.createElement('span'); label.className = 'app-button-label';
+                label.textContent = v.label || '视频'+(idx+1);
                 btnDiv.appendChild(iconDiv); btnDiv.appendChild(label); videoDiv.appendChild(btnDiv);
             });
         }
 
+        // 核心优化：修改 renderAdmin，添加同步写入 input 状态，避免由于重绘时 ID 动态绑定导致按钮和链接“跑掉”或乱序
         function renderAdmin() {
             document.getElementById('adminLoading').style.display = 'none';
             document.getElementById('adminContent').style.display = 'block';
             updateBackgroundFromConfig(); loadButtonSettings();
             renderInboxAdminList();
+            
+            if (!config.appButtons) config.appButtons = [];
+            if (!config.videoButtons) config.videoButtons = [];
+
             const appAdmin = document.getElementById('appButtonsAdmin'); appAdmin.innerHTML = '';
             config.appButtons.forEach((btn, idx) => {
                 const card = document.createElement('div'); card.className = 'card';
                 card.innerHTML = `<div class="badge">📱 按钮 ${idx+1}</div>
-                    <label>按钮名称</label><input type="text" id="app_label_${idx}" value="${(btn.label || '').replace(/"/g, '&quot;')}">
-                    <label>图标图片URL</label><input type="url" id="app_icon_${idx}" value="${(btn.iconUrl || '').replace(/"/g, '&quot;')}" placeholder="https://...">
+                    <label>按钮名称</label><input type="text" id="app_label_${idx}" value="${(btn.label || '').replace(/"/g, '&quot;')}" onchange="syncAdminData()">
+                    <label>图标图片URL</label><input type="url" id="app_icon_${idx}" value="${(btn.iconUrl || '').replace(/"/g, '&quot;')}" placeholder="https://..." onchange="syncAdminData()">
                     ${btn.iconUrl ? `<div class="icon-preview"><img src="${btn.iconUrl}" onerror="this.style.display='none'"> 当前图标</div>` : ''}
-                    <label>链接URL</label><input type="url" id="app_url_${idx}" value="${(btn.url || '').replace(/"/g, '&quot;')}">
-                    <label>背景颜色</label><div class="color-picker-container"><input type="color" id="app_color_picker_${idx}" value="${btn.color || getRandomColor()}" onchange="updateColorText('app_color_${idx}', this.value)"><input type="text" id="app_color_${idx}" value="${btn.color || getRandomColor()}" onchange="updateColorPicker('app_color_picker_${idx}', this.value)"></div>
-                    <label>打开方式</label><select id="app_openType_${idx}"><option value="fullscreen" ${(btn.openType||'fullscreen')==='fullscreen'?'selected':''}>全屏打开</option><option value="newtab" ${(btn.openType||'fullscreen')==='newtab'?'selected':''}>新窗口</option></select>
-                    <label>独立密码</label><div class="password-field"><input type="password" id="app_password_${idx}" value="${(btn.password||'').replace(/"/g, '&quot;')}" placeholder="留空无密码"><span class="password-toggle" onclick="togglePasswordVisibility('app_password_${idx}')">👁️</span></div>
-                    <label>自动刷新</label><select id="app_autoRefresh_${idx}"><option value="true" ${btn.autoRefresh!==false?'selected':''}>开启</option><option value="false" ${btn.autoRefresh===false?'selected':''}>关闭</option></select>
-                    <label>密码提示</label><input type="text" id="app_passwordHint_${idx}" value="${(btn.passwordHint||'').replace(/"/g, '&quot;')}">
+                    <label>链接URL</label><input type="url" id="app_url_${idx}" value="${(btn.url || '').replace(/"/g, '&quot;')}" onchange="syncAdminData()">
+                    <label>背景颜色</label><div class="color-picker-container"><input type="color" id="app_color_picker_${idx}" value="${btn.color || getRandomColor()}" onchange="updateColorText('app_color_${idx}', this.value); syncAdminData();"><input type="text" id="app_color_${idx}" value="${btn.color || getRandomColor()}" onchange="updateColorPicker('app_color_picker_${idx}', this.value); syncAdminData();"></div>
+                    <label>打开方式</label><select id="app_openType_${idx}" onchange="syncAdminData()"><option value="fullscreen" ${(btn.openType||'fullscreen')==='fullscreen'?'selected':''}>全屏打开</option><option value="newtab" ${(btn.openType||'fullscreen')==='newtab'?'selected':''}>新窗口</option></select>
+                    <label>独立密码</label><div class="password-field"><input type="password" id="app_password_${idx}" value="${(btn.password||'').replace(/"/g, '&quot;')}" placeholder="留空无密码" onchange="syncAdminData()"><span class="password-toggle" onclick="togglePasswordVisibility('app_password_${idx}')">👁️</span></div>
+                    <label>自动刷新</label><select id="app_autoRefresh_${idx}" onchange="syncAdminData()"><option value="true" ${btn.autoRefresh!==false?'selected':''}>开启</option><option value="false" ${btn.autoRefresh===false?'selected':''}>关闭</option></select>
+                    <label>密码提示</label><input type="text" id="app_passwordHint_${idx}" value="${(btn.passwordHint||'').replace(/"/g, '&quot;')}" onchange="syncAdminData()">
                     <div style="display:flex; justify-content:flex-end;"><button class="btn-danger" onclick="removeAppButton(${idx})">🗑️ 删除</button></div>`;
                 appAdmin.appendChild(card);
             });
+            
             const videoAdmin = document.getElementById('videoButtonsAdmin'); videoAdmin.innerHTML = '';
             config.videoButtons.forEach((v, idx) => {
                 const div = document.createElement('div'); div.className = 'video-card';
                 div.innerHTML = `<div class="flex-row" style="display:flex; justify-content:space-between;"><span class="badge">🎬 视频 ${idx+1}</span><button class="btn-danger" onclick="removeVideoButton(${idx})">🗑️ 移除</button></div>
-                    <div class="video-grid"><label>按钮名称</label><input type="text" id="video_label_${idx}" value="${(v.label||'').replace(/"/g, '&quot;')}">
-                    <label>平台</label><select id="video_platform_${idx}"><option value="google-drive" ${v.platform==='google-drive'?'selected':''}>Google Drive</option><option value="youtube" ${v.platform==='youtube'?'selected':''}>YouTube</option></select>
-                    <label>ID/链接</label><input type="text" id="video_input_${idx}" value="${(v.platform==='google-drive'? v.fileId||'' : v.youtubeUrl||'').replace(/"/g, '&quot;')}"></div>
-                    <div class="icon-url-field"><label>图标图片URL</label><div style="grid-column:2/5;"><input type="url" id="video_icon_${idx}" value="${(v.iconUrl||'').replace(/"/g, '&quot;')}" placeholder="https://...">${v.iconUrl ? `<div class="icon-preview"><img src="${v.iconUrl}" onerror="this.style.display='none'"> 当前图标</div>` : ''}</div></div>
-                    <div class="video-color-field"><label>按钮颜色</label><div class="color-picker-container" style="grid-column:2/5;"><input type="color" id="video_color_picker_${idx}" value="${v.color||getRandomColor()}" onchange="updateColorText('video_color_${idx}', this.value)"><input type="text" id="video_color_${idx}" value="${v.color||getRandomColor()}" onchange="updateColorPicker('video_color_picker_${idx}', this.value)"></div></div>
-                    <div class="video-password-field"><label>独立密码</label><div class="password-field" style="grid-column:2/3;"><input type="password" id="video_password_${idx}" value="${(v.password||'').replace(/"/g, '&quot;')}" placeholder="留空无密码"><span class="password-toggle" onclick="togglePasswordVisibility('video_password_${idx}')">👁️</span></div>
-                    <label>密码提示</label><input type="text" id="video_passwordHint_${idx}" value="${(v.passwordHint||'').replace(/"/g, '&quot;')}" style="grid-column:2/5;"></div>`;
+                    <div class="video-grid"><label>按钮名称</label><input type="text" id="video_label_${idx}" value="${(v.label||'').replace(/"/g, '&quot;')}" onchange="syncAdminData()">
+                    <label>平台</label><select id="video_platform_${idx}" onchange="syncAdminData()"><option value="google-drive" ${v.platform==='google-drive'?'selected':''}>Google Drive</option><option value="youtube" ${v.platform==='youtube'?'selected':''}>YouTube</option></select>
+                    <label>ID/链接</label><input type="text" id="video_input_${idx}" value="${(v.platform==='google-drive'? v.fileId||'' : v.youtubeUrl||'').replace(/"/g, '&quot;')}" onchange="syncAdminData()"></div>
+                    <div class="icon-url-field"><label>图标图片URL</label><div style="grid-column:2/5;"><input type="url" id="video_icon_${idx}" value="${(v.iconUrl||'').replace(/"/g, '&quot;')}" placeholder="https://..." onchange="syncAdminData()">${v.iconUrl ? `<div class="icon-preview"><img src="${v.iconUrl}" onerror="this.style.display='none'"> 当前图标</div>` : ''}</div></div>
+                    <div class="video-color-field"><label>按钮颜色</label><div class="color-picker-container" style="grid-column:2/5;"><input type="color" id="video_color_picker_${idx}" value="${v.color||getRandomColor()}" onchange="updateColorText('video_color_${idx}', this.value); syncAdminData();"><input type="text" id="video_color_${idx}" value="${v.color||getRandomColor()}" onchange="updateColorPicker('video_color_picker_${idx}', this.value); syncAdminData();"></div></div>
+                    <div class="video-password-field"><label>独立密码</label><div class="password-field" style="grid-column:2/3;"><input type="password" id="video_password_${idx}" value="${(v.password||'').replace(/"/g, '&quot;')}" placeholder="留空无密码" onchange="syncAdminData()"><span class="password-toggle" onclick="togglePasswordVisibility('video_password_${idx}')">👁️</span></div>
+                    <label>密码提示</label><input type="text" id="video_passwordHint_${idx}" value="${(v.passwordHint||'').replace(/"/g, '&quot;')}" style="grid-column:2/5;" onchange="syncAdminData()"></div>`;
                 videoAdmin.appendChild(div);
             });
         }
 
+        // 新增数据实时同步防走丢机制
+        window.syncAdminData = function() {
+            if (!config) return;
+            // 同步App数据
+            for (let i = 0; i < config.appButtons.length; i++) {
+                if(document.getElementById(`app_label_${i}`)) {
+                    config.appButtons[i].label = document.getElementById(`app_label_${i}`).value;
+                    config.appButtons[i].url = document.getElementById(`app_url_${i}`).value;
+                    config.appButtons[i].iconUrl = document.getElementById(`app_icon_${i}`).value;
+                    config.appButtons[i].color = document.getElementById(`app_color_${i}`).value;
+                    config.appButtons[i].openType = document.getElementById(`app_openType_${i}`).value;
+                    config.appButtons[i].password = document.getElementById(`app_password_${i}`).value;
+                    config.appButtons[i].autoRefresh = document.getElementById(`app_autoRefresh_${i}`).value === 'true';
+                    config.appButtons[i].passwordHint = document.getElementById(`app_passwordHint_${i}`).value;
+                }
+            }
+            // 同步视频数据
+            for (let i = 0; i < config.videoButtons.length; i++) {
+                if(document.getElementById(`video_label_${i}`)) {
+                    const platform = document.getElementById(`video_platform_${i}`).value;
+                    const inputVal = document.getElementById(`video_input_${i}`).value;
+                    config.videoButtons[i].label = document.getElementById(`video_label_${i}`).value;
+                    config.videoButtons[i].platform = platform;
+                    config.videoButtons[i].fileId = platform === 'google-drive' ? inputVal : '';
+                    config.videoButtons[i].youtubeUrl = platform === 'youtube' ? inputVal : '';
+                    config.videoButtons[i].iconUrl = document.getElementById(`video_icon_${i}`).value;
+                    config.videoButtons[i].color = document.getElementById(`video_color_${i}`).value;
+                    config.videoButtons[i].password = document.getElementById(`video_password_${i}`).value;
+                    config.videoButtons[i].passwordHint = document.getElementById(`video_passwordHint_${i}`).value;
+                }
+            }
+        };
+
         window.updateColorText = function(id, val) { const el = document.getElementById(id); if(el) el.value = val; };
         window.updateColorPicker = function(id, val) { const el = document.getElementById(id); if(el && /^#[0-9A-F]{6}$/i.test(val)) el.value = val; };
         window.togglePasswordVisibility = function(id) { const inp = document.getElementById(id); if(inp) inp.type = inp.type === 'password' ? 'text' : 'password'; };
-        window.addAppButton = function() { config.appButtons.push({ label:'新下载', url:'https://', color:getRandomColor(), iconUrl:'', openType:'fullscreen', password:'', autoRefresh:true, passwordHint:'' }); renderAdmin(); };
-        window.removeAppButton = function(i) { config.appButtons.splice(i,1); renderAdmin(); };
-        window.addVideoButton = function() { config.videoButtons.push({ label:'新视频', platform:'youtube', youtubeUrl:'', color:getRandomColor(), iconUrl:'', password:'', passwordHint:'' }); renderAdmin(); };
-        window.removeVideoButton = function(i) { config.videoButtons.splice(i,1); renderAdmin(); };
+        
+        window.addAppButton = function() { 
+            syncAdminData();
+            config.appButtons.push({ label:'新下载', url:'https://', color:getRandomColor(), iconUrl:'', openType:'fullscreen', password:'', autoRefresh:true, passwordHint:'' }); 
+            renderAdmin(); 
+        };
+        window.removeAppButton = function(i) { 
+            syncAdminData();
+            config.appButtons.splice(i,1); 
+            renderAdmin(); 
+        };
+        window.addVideoButton = function() { 
+            syncAdminData();
+            config.videoButtons.push({ label:'新视频', platform:'youtube', youtubeUrl:'', color:getRandomColor(), iconUrl:'', password:'', passwordHint:'' });
+            renderAdmin(); 
+        };
+        window.removeVideoButton = function(i) { 
+            syncAdminData();
+            config.videoButtons.splice(i,1); 
+            renderAdmin(); 
+        };
 
         function updateBackgroundFromConfig() {
             if(config){
@@ -1598,6 +1659,7 @@
         }
 
         window.openGistEdit = function() {
+            syncAdminData();
             const mobileUrl1 = document.getElementById('mobileBgInput1').value.trim() || 'https://images.unsplash.com/photo-1557683316-973673baf926?w=400';
             const mobileUrl2 = document.getElementById('mobileBgInput2').value.trim() || 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=400';
             const desktopUrl1 = document.getElementById('desktopBgInput1').value.trim() || 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1920';
@@ -1611,48 +1673,17 @@
                 radius: document.getElementById('buttonRadius').value, fontSize: document.getElementById('buttonFontSize').value
             };
             
-            const appButtonsData = [];
-            for (let i = 0; i < config.appButtons.length; i++) {
-                appButtonsData.push({
-                    label: document.getElementById(`app_label_${i}`)?.value || '按钮',
-                    url: document.getElementById(`app_url_${i}`)?.value || 'https://',
-                    iconUrl: document.getElementById(`app_icon_${i}`)?.value || '',
-                    color: document.getElementById(`app_color_${i}`)?.value || getRandomColor(),
-                    openType: document.getElementById(`app_openType_${i}`)?.value || 'fullscreen',
-                    password: document.getElementById(`app_password_${i}`)?.value || '',
-                    autoRefresh: document.getElementById(`app_autoRefresh_${i}`)?.value === 'true',
-                    passwordHint: document.getElementById(`app_passwordHint_${i}`)?.value || ''
-                });
-            }
-            
-            const videoButtonsData = [];
-            for (let i = 0; i < config.videoButtons.length; i++) {
-                const platform = document.getElementById(`video_platform_${i}`)?.value || 'google-drive';
-                const inputVal = document.getElementById(`video_input_${i}`)?.value || '';
-                videoButtonsData.push({
-                    label: document.getElementById(`video_label_${i}`)?.value || '视频',
-                    platform: platform,
-                    fileId: platform === 'google-drive' ? inputVal : '',
-                    youtubeUrl: platform === 'youtube' ? inputVal : '',
-                    iconUrl: document.getElementById(`video_icon_${i}`)?.value || '',
-                    color: document.getElementById(`video_color_${i}`)?.value || getRandomColor(),
-                    password: document.getElementById(`video_password_${i}`)?.value || '',
-                    passwordHint: document.getElementById(`video_passwordHint_${i}`)?.value || ''
-                });
-            }
-            
             const currentConfig = {
                 bgInterval: bgInterval,
                 mobileBackgrounds: [mobileUrl1, mobileUrl2],
                 desktopBackgrounds: [desktopUrl1, desktopUrl2],
                 buttonSettings: buttonSettings,
-                appButtons: appButtonsData,
-                videoButtons: videoButtonsData,
+                appButtons: config.appButtons,
+                videoButtons: config.videoButtons,
                 inboxMessages: config.inboxMessages || []
             };
             
             const configStr = JSON.stringify(currentConfig, null, 2);
-            
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(configStr).then(function() {
                     showCopySuccessMessage();
@@ -1673,7 +1704,8 @@
         window.handleLoginKeyPress = function(e) { if (e.key === 'Enter') handleLogin(); };
         window.handleLogin = function() {
             if (document.getElementById('username').value === ADMIN_CREDENTIALS.username && document.getElementById('password').value === ADMIN_CREDENTIALS.password) {
-                sessionStorage.setItem('lemontea_admin', 'true'); isAdmin = true; closeLoginModal();
+                sessionStorage.setItem('lemontea_admin', 'true');
+                isAdmin = true; closeLoginModal();
                 document.getElementById('frontendContainer').classList.add('hidden'); document.getElementById('adminContainer').classList.remove('hidden');
                 renderAdmin();
             } else alert('账号或密码错误');
